@@ -29,6 +29,7 @@ import java.util.Optional;
 import java.util.Random;
 import java.time.Instant;
 import java.time.LocalDate;
+import com.parking.utils.Constants;
 
 @Service
 @Slf4j
@@ -92,7 +93,7 @@ public class VehicleServiceImpl implements VehicleService {
     }
 
     private VehiculeAccountDto fromVehicule(VehicleDto dto, String numero_compte) {
-        String qrCodeText=numero_compte+generateUniqueId();
+    	String qrCodeText=Constants.QRCODE_PREFIX+numero_compte+generateUniqueId();
         byte[] qrCodeImage = null;
         try {
             qrCodeImage = qrCodeService.generateQRCodeImage(qrCodeText, 300, 300);

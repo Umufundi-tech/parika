@@ -61,11 +61,12 @@ public class TransactionServiceImpl implements TransactionService {
             throw new InvalidEntityException("Vehicule est deja en parking.", ErrorCodes.PARKINGTICKET_VEHICLE_ALREADY_IN_PARKING);
         }
 
-        if(!isAccountExist(dto.getAccount().getId())) {
-            throw new EntityNotFoundException("Aucun compte avec l'ID = " +dto.getAccount().getId()+ " n' a ete trouve dans la BDD",
+        if(!isAccountExist(dto.getQrCodeString())) {
+            throw new EntityNotFoundException("Aucun compte avec ce QrCode n' a été trouve dans la BDD",
                     ErrorCodes.ACCOUNT_NOT_FOUND);
         }
-        BigDecimal accountSoldValue = transactionRepository.accountSold(dto.getAccount().getId());
+        Optional<VehiculeAccount> getAccountByQrCodeString = accountRepository.findVehicleAccountByQrCodeString(dto.getQrCodeString());
+        BigDecimal accountSoldValue = transactionRepository.accountSold(getAccountByQrCodeString.get().getId());
         BigDecimal sold= BigDecimal.valueOf(0);
         sold = Objects.requireNonNullElseGet(accountSoldValue, () -> BigDecimal.valueOf(0));
         if (sold.compareTo(dto.getParkingTicket().getFareAmount())< 0){
@@ -161,8 +162,8 @@ public class TransactionServiceImpl implements TransactionService {
         return parkingTicket.isPresent();
     }
 
-    private boolean isAccountExist(Long id) {
-        Optional<VehiculeAccount> account = accountRepository.findById(id);
+    private boolean isAccountExist(String qrCodeString) {
+        Optional<VehiculeAccount> account = accountRepository.findVehicleAccountByQrCodeString(qrCodeString);
         return account.isPresent();
     }
 

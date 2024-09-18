@@ -23,8 +23,8 @@ public class PaymentValidator {
         if(paymentDto.getParkingTicket() == null || paymentDto.getParkingTicket().getId() == null || paymentDto.getParkingTicket().getId().compareTo(0L) == 0) {
             errors.add("Veuiller selectionner un ticket");
         }
-        if(paymentDto.getAccount() == null || paymentDto.getAccount().getId() == null || paymentDto.getAccount().getId().compareTo(0L) == 0) {
-            errors.add("Veuillez selectionner un compte");
+        if(paymentDto.getQrCodeString() == null) {
+            errors.add("Veuillez renseigner un qrCode");
         }
         
         assert paymentDto.getParkingTicket()!=null;
