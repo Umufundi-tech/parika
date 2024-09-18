@@ -2,7 +2,7 @@ package com.parking.controller.api;
 
 import java.util.List;
 
-import com.parking.dto.DepositDto;
+import com.parking.dto.DepositSaveDto;
 import com.parking.dto.PaymentListDto;
 import com.parking.dto.PaymentSaveDto;
 
@@ -39,7 +39,7 @@ public interface TransactionApi {
             @ApiResponse(responseCode = "400", description = "L'objet depot n'est pas valide")
     })
     @PostMapping(value = Constants.APP_ROOT + "/transactions/deposits/create", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    DepositDto saveDeposit(@RequestBody DepositDto dto);
+    DepositSaveDto saveDeposit(@RequestBody DepositSaveDto dto);
 
 
 }

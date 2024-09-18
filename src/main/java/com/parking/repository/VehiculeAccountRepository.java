@@ -20,6 +20,9 @@ public interface VehiculeAccountRepository extends JpaRepository<VehiculeAccount
     @Query(value = "select v from VehiculeAccount v where v.id = :id")
     VehiculeAccount findVehiculeAccountById(@Param("id") Long id);
     
+    @Query(value = "select v from VehiculeAccount v where v.accountNumber = :accountNumber")
+    VehiculeAccount findByAccountNumber(@Param("accountNumber") String accountNumber);
+    
     VehiculeAccount findByVehicleId(Long vehicule_id);
     
     //JPQL query

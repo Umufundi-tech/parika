@@ -107,29 +107,43 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public DepositDto saveDeposit(DepositDto dto) {
+    public DepositSaveDto saveDeposit(DepositSaveDto dto) {
 
         List<String> errors = DepositValidator.validate(dto);
         if(!errors.isEmpty()) {
             throw new InvalidEntityException("Le depot n'est pas valide", ErrorCodes.DEPOSIT_NOT_FOUND,errors);
         }
-
-        dto.getTransaction().setTransactionCode(transactionCodePrefix()+generateTransactionCode(10));
-        dto.getTransaction().setTransactionDate(LocalDate.now());
-        dto.getTransaction().setTransactionType(TransactionTypeEnum.DEPOSIT);
-        dto.getTransaction().setTransactionAmount(
+        
+        VehiculeAccount vehiculeAccount = accountRepository.findByAccountNumber(dto.getAccountNumber());
+        if (vehiculeAccount == null) {
+        	throw new EntityNotFoundException("Le compte véhicule est introuvable", ErrorCodes.ACCOUNT_NOT_FOUND);
+        }
+        
+        //Save transaction
+        Transaction transaction = new Transaction();
+        
+        transaction.setTransactionCode(transactionCodePrefix()+generateTransactionCode(10));
+        transaction.setTransactionDate(LocalDate.now());
+        transaction.setTransactionType(TransactionTypeEnum.DEPOSIT);
+        transaction.setAccount(vehiculeAccount);
+        transaction.setTransactionAmount(
                 BigDecimal.valueOf(
-                        Math.abs(dto.getTransaction().getTransactionAmount().doubleValue())
+                        Math.abs(dto.getDepositAmount().doubleValue())
                 )
         );
+        
         TransactionDto savedTransaction = TransactionDto.fromEntity(
-                transactionRepository.save(TransactionDto.toEntity(dto.getTransaction()))
+                transactionRepository.save(transaction)
+        );
+        
+        //Save deposit
+        Deposit deposit = new Deposit();
+        deposit.setTransaction(TransactionDto.toEntity(savedTransaction));
+        
+        return DepositSaveDto.fromEntity(
+                   depositRepository.save(deposit)
         );
 
-        DepositDto depositDto = fromTransaction(savedTransaction);
-        return DepositDto.fromEntity(
-                depositRepository.save(DepositDto.toEntity(depositDto))
-        );
     }
 
     private PaymentListDto fromTransaction(TransactionDto dto,ParkingTicketDto parkingTicketDto) {

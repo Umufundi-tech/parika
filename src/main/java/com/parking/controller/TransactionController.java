@@ -3,6 +3,7 @@ package com.parking.controller;
 import java.util.List;
 
 import com.parking.dto.DepositDto;
+import com.parking.dto.DepositSaveDto;
 import com.parking.dto.PaymentListDto;
 import com.parking.dto.PaymentSaveDto;
 
@@ -32,7 +33,7 @@ public class TransactionController implements TransactionApi {
     }
 
     @Override
-    public DepositDto saveDeposit(DepositDto dto) {
+    public DepositSaveDto saveDeposit(DepositSaveDto dto) {
         return transactionService.saveDeposit(dto);
     }
 }
