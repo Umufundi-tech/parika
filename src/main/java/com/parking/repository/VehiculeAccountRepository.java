@@ -8,7 +8,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-
 import com.parking.model.VehiculeAccount;
 
 public interface VehiculeAccountRepository extends JpaRepository<VehiculeAccount, Long> {
@@ -17,6 +16,9 @@ public interface VehiculeAccountRepository extends JpaRepository<VehiculeAccount
     Page<VehiculeAccount> findAllAccount(Pageable pageable);
     
     List<VehiculeAccount> findVehiculeAccountByVehicleId(Long vehicle_id);
+    
+    @Query(value = "select v from VehiculeAccount v where v.id = :id")
+    VehiculeAccount findVehiculeAccountById(@Param("id") Long id);
     
     VehiculeAccount findByVehicleId(Long vehicule_id);
     
