@@ -65,7 +65,9 @@ public class TransactionServiceImpl implements TransactionService {
             throw new EntityNotFoundException("Aucun compte avec ce QrCode n' a été trouve dans la BDD",
                     ErrorCodes.ACCOUNT_NOT_FOUND);
         }
+        
         Optional<VehiculeAccount> getAccountByQrCodeString = accountRepository.findVehicleAccountByQrCodeString(dto.getQrCodeString());
+        
         BigDecimal accountSoldValue = transactionRepository.accountSold(getAccountByQrCodeString.get().getId());
         BigDecimal sold= BigDecimal.valueOf(0);
         sold = Objects.requireNonNullElseGet(accountSoldValue, () -> BigDecimal.valueOf(0));
@@ -80,6 +82,7 @@ public class TransactionServiceImpl implements TransactionService {
         transaction.setTransactionCode(transactionCodePrefix()+generateTransactionCode(10));
         transaction.setTransactionDate(LocalDate.now());
         transaction.setTransactionType(TransactionTypeEnum.PAYMENT);
+        transaction.setAccount(getAccountByQrCodeString.get());
         transaction.setTransactionAmount(
                 BigDecimal.valueOf(
                         Math.abs(dto.getParkingTicket().getFareAmount().doubleValue())* -1
