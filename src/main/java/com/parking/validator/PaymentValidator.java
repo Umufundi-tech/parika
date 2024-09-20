@@ -15,8 +15,8 @@ public class PaymentValidator {
         if(paymentDto == null) {
             errors.add("Veuiller selectionner un ticket");
             errors.add("Veuillez selectionner un compte");
-            errors.add("Veuiller renseigner le montant de transaction");
-            errors.add("Le montant de transaction doit etre superieur à zero");
+//            errors.add("Veuiller renseigner le montant de transaction");
+//            errors.add("Le montant de transaction doit etre superieur à zero");
             return errors;
         }
 
@@ -27,14 +27,14 @@ public class PaymentValidator {
             errors.add("Veuillez renseigner un qrCode");
         }
         
-        assert paymentDto.getParkingTicket()!=null;
-        
-        if(paymentDto.getParkingTicket().getFareAmount() == null) {
-            errors.add("Veuiller renseigner le montant de transaction");
-        }
-        if(paymentDto.getParkingTicket().getFareAmount() == null || paymentDto.getParkingTicket().getFareAmount().compareTo(BigDecimal.valueOf(0)) == 0) {
-            errors.add("Le montant de transaction doit etre superieur à zero");
-        }
+//        assert paymentDto.getParkingTicket()!=null;
+//        
+//        if(paymentDto.getParkingTicket().getFareAmount() == null) {
+//            errors.add("Veuiller renseigner le montant de transaction");
+//        }
+//        if(paymentDto.getParkingTicket().getFareAmount() == null || paymentDto.getParkingTicket().getFareAmount().compareTo(BigDecimal.valueOf(0)) == 0) {
+//            errors.add("Le montant de transaction doit etre superieur à zero");
+//        }
 
         return errors;
     }
