@@ -66,6 +66,10 @@ public class TransactionServiceImpl implements TransactionService {
                     ErrorCodes.ACCOUNT_NOT_FOUND);
         }
         
+        if(!dto.getQrCodeString().equals(dto.getParkingTicket().getAccount().getQrCodeString())) {
+        	throw new EntityNotFoundException("Le QR code du ticket ne correspond pas au QR code du compte", ErrorCodes.QRCODEACCOUNT_AND_QRCODETICKET_NOT_MATCH);
+        }
+        
         Optional<VehiculeAccount> getAccountByQrCodeString = accountRepository.findVehicleAccountByQrCodeString(dto.getQrCodeString());
         
         BigDecimal accountSoldValue = transactionRepository.accountSold(getAccountByQrCodeString.get().getId());
@@ -101,7 +105,7 @@ public class TransactionServiceImpl implements TransactionService {
         //Save payment
         Payment payment = new Payment();
         payment.setTransaction(TransactionDto.toEntity(savedTransaction));
-        payment.setParkingTicket(ParkingTicketDto.toEntity(dto.getParkingTicket()));
+        payment.setParkingTicket(ParkingTicketListDto.toEntity(dto.getParkingTicket()));
         
         //PaymentListDto paymentDto = fromTransaction(savedTransaction,dto.getParkingTicket());
         return PaymentSaveDto.fromEntity(

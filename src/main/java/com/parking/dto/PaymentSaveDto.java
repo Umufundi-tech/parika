@@ -17,7 +17,7 @@ public class PaymentSaveDto {
 
     private Long id;
     private String qrCodeString;
-    private ParkingTicketDto parkingTicket;
+    private ParkingTicketListDto parkingTicket;
 
     public static PaymentSaveDto fromEntity(Payment payment) {
         if(payment == null) {
@@ -27,19 +27,19 @@ public class PaymentSaveDto {
         return PaymentSaveDto.builder()
                 .id(payment.getId())
                 .qrCodeString(payment.getTransaction().getAccount().getQrCodeString())
-                .parkingTicket(ParkingTicketDto.fromEntity(payment.getParkingTicket()))
+                .parkingTicket(ParkingTicketListDto.fromEntity(payment.getParkingTicket()))
                 .build();
     }
 
-    public static Payment toEntity(PaymentSaveDto paymentSaveDto, TransactionDto transactionDto, ParkingTicketDto parkingTicketDto) {
-        if(paymentSaveDto == null || transactionDto == null ||  parkingTicketDto == null ) {
+    public static Payment toEntity(PaymentSaveDto paymentSaveDto, TransactionDto transactionDto, ParkingTicketListDto parkingTicketListDto) {
+        if(paymentSaveDto == null || transactionDto == null ||  parkingTicketListDto == null ) {
             return null;
         }
 
         Payment payment = new Payment();
         payment.setId(paymentSaveDto.getId());
         payment.setTransaction(TransactionDto.toEntity(transactionDto));
-        payment.setParkingTicket(ParkingTicketDto.toEntity(parkingTicketDto));
+        payment.setParkingTicket(ParkingTicketListDto.toEntity(parkingTicketListDto));
         return payment;
     }
 

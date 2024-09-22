@@ -134,13 +134,13 @@ public class ParkingTicketServiceImpl implements ParkingTicketService {
     }
 
     @Override
-    public ParkingTicketDto findById(Long id) {
+    public ParkingTicketListDto findById(Long id) {
     	if(id == null) {
     		log.error("Parking Ticket ID is null");
     	}
     	
         return parkingTicketRepository.findById(id)
-        		.map(ParkingTicketDto::fromEntity)
+        		.map(ParkingTicketListDto::fromEntity)
         		.orElseThrow(()-> new EntityNotFoundException(
         				"Aucun ticket de parking avec l'ID " +id+ " n'a été trouvé dans la BDD", 
         				ErrorCodes.PARKINGTICKET_NOT_FOUND)
@@ -148,7 +148,7 @@ public class ParkingTicketServiceImpl implements ParkingTicketService {
     }
 
     @Override
-    public Page<ParkingTicketDto> findAllParkingTicket(Pageable pageable) {
+    public Page<ParkingTicketListDto> findAllParkingTicket(Pageable pageable) {
         return null;
     }
 
@@ -162,15 +162,15 @@ public class ParkingTicketServiceImpl implements ParkingTicketService {
     }
 
 	@Override
-	public List<ParkingTicketDto> findAll() {
+	public List<ParkingTicketListDto> findAll() {
 		
 		return parkingTicketRepository.findAll().stream()
-				.map(ParkingTicketDto::fromEntity)
+				.map(ParkingTicketListDto::fromEntity)
 				.collect(Collectors.toList());
 	}
 
 	@Override
-	public Page<ParkingTicketDto> findActiveParkingTIcketByParkingSpaceId(Long parkingSpaceId, String search,
+	public Page<ParkingTicketListDto> findActiveParkingTIcketByParkingSpaceId(Long parkingSpaceId, String search,
 			Pageable pageable) {
 		Page<ParkingTicket> parkingTickets;
 		if (search != null) {
@@ -178,15 +178,15 @@ public class ParkingTicketServiceImpl implements ParkingTicketService {
 		} else {
 			parkingTickets = parkingTicketRepository.findActiveParkingTicketByParkingSpaceIdWithNoSearch(parkingSpaceId, pageable);
 		}
-		return parkingTickets.map(ParkingTicketDto::fromEntity);
+		return parkingTickets.map(ParkingTicketListDto::fromEntity);
 	}
 
 	@Override
-	public ParkingTicketDto getActiveParkingTicketByParkingSpaceAndRegistrationNumber(Long parkingSpaceId,
+	public ParkingTicketListDto getActiveParkingTicketByParkingSpaceAndRegistrationNumber(Long parkingSpaceId,
 			String registrationNumber) {
 		
 		return parkingTicketRepository.findActiveParkingTicketByParkingSpaceIdAndRegistrationNumber(parkingSpaceId, registrationNumber)
-				.map(ParkingTicketDto::fromEntity)
+				.map(ParkingTicketListDto::fromEntity)
 				.orElseThrow(()-> new EntityNotFoundException("Aucun ticket de parking n'a été trouvé dans la BDD avec le numero de plaque " +registrationNumber));
 	}
 }

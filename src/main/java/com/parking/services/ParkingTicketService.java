@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import com.parking.dto.ParkingTicketDto;
+import com.parking.dto.ParkingTicketListDto;
 
 public interface ParkingTicketService {
 
@@ -13,15 +14,15 @@ public interface ParkingTicketService {
 
     ParkingTicketDto exitParking(Long parkingTicketId);
 
-    ParkingTicketDto findById(Long id);
+    ParkingTicketListDto findById(Long id);
     
-    List<ParkingTicketDto> findAll();
+    List<ParkingTicketListDto> findAll();
 
-    Page<ParkingTicketDto> findAllParkingTicket(Pageable pageable);
+    Page<ParkingTicketListDto> findAllParkingTicket(Pageable pageable);
     
-    Page<ParkingTicketDto> findActiveParkingTIcketByParkingSpaceId(Long parkingSpaceId, String search, Pageable pageable);
+    Page<ParkingTicketListDto> findActiveParkingTIcketByParkingSpaceId(Long parkingSpaceId, String search, Pageable pageable);
     
-    ParkingTicketDto getActiveParkingTicketByParkingSpaceAndRegistrationNumber(Long parkingSpaceId, String registrationNumber);
+    ParkingTicketListDto getActiveParkingTicketByParkingSpaceAndRegistrationNumber(Long parkingSpaceId, String registrationNumber);
 
     void delete (Long id);
 }

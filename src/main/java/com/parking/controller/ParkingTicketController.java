@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.parking.controller.api.ParkingTicketApi;
 import com.parking.dto.ParkingTicketDto;
+import com.parking.dto.ParkingTicketListDto;
 import com.parking.services.ParkingTicketService;
 
 @RestController
@@ -33,7 +34,7 @@ public class ParkingTicketController implements ParkingTicketApi {
     }
 
     @Override
-    public ParkingTicketDto findById(Long id) {
+    public ParkingTicketListDto findById(Long id) {
     	
         return parkingTicketService.findById(id);
     }
@@ -44,13 +45,13 @@ public class ParkingTicketController implements ParkingTicketApi {
     }
 
 	@Override
-	public List<ParkingTicketDto> findAll() {
+	public List<ParkingTicketListDto> findAll() {
 		
 		return parkingTicketService.findAll();
 	}
 
 	@Override
-	public Page<ParkingTicketDto> findActiveParkingTicketByParkingSpaceId(Long parkingSpaceId, String search, int page,
+	public Page<ParkingTicketListDto> findActiveParkingTicketByParkingSpaceId(Long parkingSpaceId, String search, int page,
 			int size) {
 		
 		Pageable pageable = PageRequest.of(page, size);
@@ -58,7 +59,7 @@ public class ParkingTicketController implements ParkingTicketApi {
 	}
 
 	@Override
-	public ParkingTicketDto getActiveParkingTicketByParkingSpaceAndRegistrationNumber(Long parkingSpaceId,
+	public ParkingTicketListDto getActiveParkingTicketByParkingSpaceAndRegistrationNumber(Long parkingSpaceId,
 			String registrationNumber) {
 		
 		return parkingTicketService.getActiveParkingTicketByParkingSpaceAndRegistrationNumber(parkingSpaceId, registrationNumber);

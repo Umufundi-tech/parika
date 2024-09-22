@@ -7,6 +7,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import com.parking.dto.ParkingTicketDto;
+import com.parking.dto.ParkingTicketListDto;
 import com.parking.utils.Constants;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -38,7 +39,7 @@ public interface ParkingTicketApi {
             @ApiResponse(responseCode = "404", description = "Aucun ticket de parking n'existe dans la BDD avec l'ID fourni")
     })
     @GetMapping(value = Constants.APP_ROOT + "/parking_tickets/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    ParkingTicketDto findById(@PathVariable("id") Long id);
+    ParkingTicketListDto findById(@PathVariable("id") Long id);
 
 //    @Operation(summary = "Récupérer la liste de tous les tickets de parking", description = "Cette methode permet de chercher et renvoyer la liste des tickets de parking qui existent" + "dans la BDD")
 //    @ApiResponses(value = {
@@ -55,7 +56,7 @@ public interface ParkingTicketApi {
             @ApiResponse(responseCode = "200", description = "La liste des tickets de parking fermé")
     })
     @GetMapping(value = Constants.APP_ROOT + "/parking_tickets/parkingSpace/{parkingSpaceId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    Page<ParkingTicketDto> findActiveParkingTicketByParkingSpaceId(
+    Page<ParkingTicketListDto> findActiveParkingTicketByParkingSpaceId(
             @PathVariable("parkingSpaceId") Long parkingSpaceId,
             @RequestParam(value = "search", required = false) String search,
             @RequestParam(value = "page", defaultValue = "0") int page,
@@ -68,14 +69,14 @@ public interface ParkingTicketApi {
             @ApiResponse(responseCode = "404", description = "Aucun ticket de parking n'existe dans la BDD")
     })
     @GetMapping(value = Constants.APP_ROOT + "/parking_tickets/parkingSpace/{parkingSpaceId}/{registrationNumber}", produces = MediaType.APPLICATION_JSON_VALUE)
-    ParkingTicketDto getActiveParkingTicketByParkingSpaceAndRegistrationNumber(@PathVariable("parkingSpaceId") Long parkingSpaceId, @PathVariable("registrationNumber") String registrationNumber);
+    ParkingTicketListDto getActiveParkingTicketByParkingSpaceAndRegistrationNumber(@PathVariable("parkingSpaceId") Long parkingSpaceId, @PathVariable("registrationNumber") String registrationNumber);
     
     @Operation(summary = "Récupérer la liste de tous les tickets de parking", description = "Cette methode permet de chercher et renvoyer la liste des tickets de parking qui existent" + "dans la BDD")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "La liste des tickets de parking / Une liste vide")
     })
     @GetMapping(value = Constants.APP_ROOT + "/parking_tickets/all", produces = MediaType.APPLICATION_JSON_VALUE)
-    List<ParkingTicketDto> findAll();
+    List<ParkingTicketListDto> findAll();
 
     @Operation(summary = "Supprimer un ticket de parking par son ID", description = "Cette methode permet de supprimer un ticket de parking par ID")
     @ApiResponses(value = {
