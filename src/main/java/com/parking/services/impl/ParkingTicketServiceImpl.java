@@ -148,7 +148,7 @@ public class ParkingTicketServiceImpl implements ParkingTicketService {
     }
 
     @Override
-    public Page<ParkingTicketListDto> findAllParkingTicket(Pageable pageable) {
+    public Page<ParkingTicketDto> findAllParkingTicket(Pageable pageable) {
         return null;
     }
 
@@ -162,10 +162,10 @@ public class ParkingTicketServiceImpl implements ParkingTicketService {
     }
 
 	@Override
-	public List<ParkingTicketListDto> findAll() {
+	public List<ParkingTicketDto> findAll() {
 		
 		return parkingTicketRepository.findAll().stream()
-				.map(ParkingTicketListDto::fromEntity)
+				.map(ParkingTicketDto::fromEntity)
 				.collect(Collectors.toList());
 	}
 
@@ -182,11 +182,11 @@ public class ParkingTicketServiceImpl implements ParkingTicketService {
 	}
 
 	@Override
-	public ParkingTicketListDto getActiveParkingTicketByParkingSpaceAndRegistrationNumber(Long parkingSpaceId,
+	public ParkingTicketDto getActiveParkingTicketByParkingSpaceAndRegistrationNumber(Long parkingSpaceId,
 			String registrationNumber) {
 		
 		return parkingTicketRepository.findActiveParkingTicketByParkingSpaceIdAndRegistrationNumber(parkingSpaceId, registrationNumber)
-				.map(ParkingTicketListDto::fromEntity)
+				.map(ParkingTicketDto::fromEntity)
 				.orElseThrow(()-> new EntityNotFoundException("Aucun ticket de parking n'a été trouvé dans la BDD avec le numero de plaque " +registrationNumber));
 	}
 }

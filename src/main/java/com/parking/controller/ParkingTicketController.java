@@ -45,7 +45,7 @@ public class ParkingTicketController implements ParkingTicketApi {
     }
 
 	@Override
-	public List<ParkingTicketListDto> findAll() {
+	public List<ParkingTicketDto> findAll() {
 		
 		return parkingTicketService.findAll();
 	}
@@ -59,7 +59,7 @@ public class ParkingTicketController implements ParkingTicketApi {
 	}
 
 	@Override
-	public ParkingTicketListDto getActiveParkingTicketByParkingSpaceAndRegistrationNumber(Long parkingSpaceId,
+	public ParkingTicketDto getActiveParkingTicketByParkingSpaceAndRegistrationNumber(Long parkingSpaceId,
 			String registrationNumber) {
 		
 		return parkingTicketService.getActiveParkingTicketByParkingSpaceAndRegistrationNumber(parkingSpaceId, registrationNumber);

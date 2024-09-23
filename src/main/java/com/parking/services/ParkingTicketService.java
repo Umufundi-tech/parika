@@ -16,13 +16,13 @@ public interface ParkingTicketService {
 
     ParkingTicketListDto findById(Long id);
     
-    List<ParkingTicketListDto> findAll();
+    List<ParkingTicketDto> findAll();
 
-    Page<ParkingTicketListDto> findAllParkingTicket(Pageable pageable);
+    Page<ParkingTicketDto> findAllParkingTicket(Pageable pageable);
     
     Page<ParkingTicketListDto> findActiveParkingTIcketByParkingSpaceId(Long parkingSpaceId, String search, Pageable pageable);
     
-    ParkingTicketListDto getActiveParkingTicketByParkingSpaceAndRegistrationNumber(Long parkingSpaceId, String registrationNumber);
+    ParkingTicketDto getActiveParkingTicketByParkingSpaceAndRegistrationNumber(Long parkingSpaceId, String registrationNumber);
 
     void delete (Long id);
 }
