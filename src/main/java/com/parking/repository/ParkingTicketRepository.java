@@ -45,5 +45,20 @@ public interface ParkingTicketRepository extends JpaRepository<ParkingTicket, Lo
     		"WHERE pt.parkingSpace.id = :parkingSpaceId AND pt.vehicle.registrationNumber = :registrationNumber " +
     		"AND pt.parkingTicketStatusEnum = 'ACTIVE' ")
     Optional<ParkingTicket> findActiveParkingTicketByParkingSpaceIdAndRegistrationNumber(Long parkingSpaceId, String registrationNumber);
+    
+    // Recuperer le nombre de vehicules dans un parking donné
+    @Query("SELECT COUNT(*) "
+    		+ "FROM ParkingTicket pt "
+    		+ "WHERE pt.parkingSpace.id = :parkingSpaceId "
+    		+ "AND pt.parkingTicketStatusEnum = 'ACTIVE' ")
+    Long countVehiclesInParkingByAgent(@Param("parkingSpaceId") Long parkingSpaceId);
+    
+    // Recuperer le nombre de tickets impayés
+    @Query("SELECT COUNT(*) "
+    		+ "FROM ParkingTicket pt "
+    		+ "WHERE pt.agent.id = :agentId "
+    		+ "AND pt.parkingTicketStatusEnum = 'CLOSED'"
+    		+ "AND pt.parkingTicketPaymentStatusEnum = 'UNPAID' ")
+    Long countUnpaidTicketsByAgent(@Param("agentId") Long agentId);
 
 }
