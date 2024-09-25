@@ -25,7 +25,7 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
     BigDecimal accountSold(@Param("accountId") Long accountId);
     
     // Recuperer la somme de l'argent d'un agent collecte par jour
-    @Query("SELECT SUM(t.transactionAmount) "
+    @Query("SELECT COALESCE(SUM(t.transactionAmount), 0) "
     		+ "FROM Transaction t "
     		+ "JOIN Payment p ON t.id = p.transaction.id "
     		+ "JOIN ParkingTicket pt ON p.parkingTicket.id = pt.id "
