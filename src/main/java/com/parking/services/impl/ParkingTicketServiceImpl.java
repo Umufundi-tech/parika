@@ -189,4 +189,20 @@ public class ParkingTicketServiceImpl implements ParkingTicketService {
 				.map(ParkingTicketDto::fromEntity)
 				.orElseThrow(()-> new EntityNotFoundException("Aucun ticket de parking n'a été trouvé dans la BDD avec le numero de plaque " +registrationNumber));
 	}
+
+	@Override
+	public List<ParkingTicketListDto> getVehiclesInParking(Long parkingSpaceId) {
+		
+		return parkingTicketRepository.findVehiclesInParking(parkingSpaceId).stream()
+				.map(ParkingTicketListDto::fromEntity)
+				.collect(Collectors.toList());
+	}
+
+	@Override
+	public List<ParkingTicketListDto> getUnpaidTicketsByAgent(Long agentId) {
+		
+		return parkingTicketRepository.findUnpaidTicketsByAgent(agentId).stream()
+				.map(ParkingTicketListDto::fromEntity)
+				.collect(Collectors.toList());
+	}
 }

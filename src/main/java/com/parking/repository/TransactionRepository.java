@@ -33,4 +33,13 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
     		+ "AND t.transactionType = 'PAYMENT' "
     		+ "AND t.transactionDate = CURRENT_DATE ")
     BigDecimal findTodaysCollectionByAgent(@Param("agentId") Long agentId);
+    
+    // Recuperer la liste de l'argent collecté (paiements) par un agent donné aujourd'hui
+    @Query("SELECT t FROM Transaction t "
+    		+ "JOIN Payment p ON t.id = p.transaction.id "
+    		+ "JOIN ParkingTicket pt ON p.parkingTicket.id = pt.id "
+    		+ "WHERE pt.agent.id = :agentId "
+    		+ "AND t.transactionType = 'PAYMENT' "
+    		+ "AND t.transactionDate = CURRENT_DATE")
+    List<Transaction> findTodaysTransactionsByAgent(@Param("agentId") Long agentId);
 }

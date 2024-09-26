@@ -3,17 +3,14 @@ package com.parking.controller.api;
 import java.util.List;
 
 import com.parking.dto.DepositSaveDto;
-import com.parking.dto.PaymentListDto;
 import com.parking.dto.PaymentSaveDto;
 
-import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import com.parking.dto.TransactionDto;
 import com.parking.utils.Constants;
@@ -40,6 +37,13 @@ public interface TransactionApi {
     })
     @PostMapping(value = Constants.APP_ROOT + "/transactions/deposits/create", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     DepositSaveDto saveDeposit(@RequestBody DepositSaveDto dto);
+    
+    @Operation(summary = "Récupérer la liste de paiements d'un agent d'aujourd'hui", description = "Cette methode permet de chercher et renvoyer la liste des paiements qui existent" + "dans la BDD")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "La liste des paiements d'un agent / Une liste vide")
+    })
+    @GetMapping(value = Constants.APP_ROOT + "/transactions/today-payments-list/{agentId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    List<TransactionDto> findPaymentsByAgent(@PathVariable("agentId") Long agentId);
 
 
 }

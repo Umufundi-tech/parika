@@ -36,4 +36,10 @@ public class TransactionController implements TransactionApi {
     public DepositSaveDto saveDeposit(DepositSaveDto dto) {
         return transactionService.saveDeposit(dto);
     }
+
+	@Override
+	public List<TransactionDto> findPaymentsByAgent(Long agentId) {
+		
+		return transactionService.getTransactionsByAgent(agentId);
+	}
 }

@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 import com.parking.dto.*;
 import com.parking.model.*;
@@ -207,6 +208,15 @@ public class TransactionServiceImpl implements TransactionService {
 
         return String.valueOf(year)+String.valueOf(month)+String.valueOf(day);
     }
+
+
+	@Override
+	public List<TransactionDto> getTransactionsByAgent(Long agentId) {
+		
+		return transactionRepository.findTodaysTransactionsByAgent(agentId).stream()
+				.map(TransactionDto::fromEntity)
+				.collect(Collectors.toList());
+	}
 
 
 //	@Override

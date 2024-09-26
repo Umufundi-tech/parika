@@ -64,4 +64,16 @@ public class ParkingTicketController implements ParkingTicketApi {
 		
 		return parkingTicketService.getActiveParkingTicketByParkingSpaceAndRegistrationNumber(parkingSpaceId, registrationNumber);
 	}
+
+	@Override
+	public List<ParkingTicketListDto> findVehiclesInParkingByParkingSpace(Long parkingSpaceId) {
+		
+		return parkingTicketService.getVehiclesInParking(parkingSpaceId);
+	}
+
+	@Override
+	public List<ParkingTicketListDto> findUnpaidTicketsByAgent(Long agentId) {
+		
+		return parkingTicketService.getUnpaidTicketsByAgent(agentId);
+	}
 }

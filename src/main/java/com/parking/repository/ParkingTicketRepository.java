@@ -9,6 +9,7 @@ import com.parking.model.ParkingTicket;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface ParkingTicketRepository extends JpaRepository<ParkingTicket, Long> {
@@ -60,5 +61,18 @@ public interface ParkingTicketRepository extends JpaRepository<ParkingTicket, Lo
     		+ "AND pt.parkingTicketStatusEnum = 'CLOSED'"
     		+ "AND pt.parkingTicketPaymentStatusEnum = 'UNPAID' ")
     Long countUnpaidTicketsByAgent(@Param("agentId") Long agentId);
-
+    
+    // Recuperer la liste des vehicules qui sont dans un parking donné
+    @Query("SELECT pt FROM ParkingTicket pt "
+    		+ "WHERE pt.parkingSpace.id = :parkingSpaceId "
+    		+ "AND pt.parkingTicketStatusEnum = 'ACTIVE' ")
+    List<ParkingTicket> findVehiclesInParking(@Param("parkingSpaceId") Long parkingSpaceId);
+    
+    // Recuperer la liste des tickets impayés
+    @Query("SELECT pt FROM ParkingTicket pt "
+    		+ "WHERE pt.agent.id = :agentId "
+    		+ "AND pt.parkingTicketStatusEnum = 'CLOSED'"
+    		+ "AND pt.parkingTicketPaymentStatusEnum = 'UNPAID' ")
+    List<ParkingTicket> findUnpaidTicketsByAgent(@Param("agentId") Long agentId);
+;
 }

@@ -23,6 +23,10 @@ public interface ParkingTicketService {
     Page<ParkingTicketListDto> findActiveParkingTIcketByParkingSpaceId(Long parkingSpaceId, String search, Pageable pageable);
     
     ParkingTicketDto getActiveParkingTicketByParkingSpaceAndRegistrationNumber(Long parkingSpaceId, String registrationNumber);
+    
+    List<ParkingTicketListDto> getVehiclesInParking(Long parkingSpaceId);
+    
+    List<ParkingTicketListDto> getUnpaidTicketsByAgent(Long agentId);
 
     void delete (Long id);
 }
