@@ -19,26 +19,44 @@ public interface VehicleRepository extends JpaRepository<Vehicle, Long> {
     @Query(value = "select v from Vehicle v where v.id = :id")
     Vehicle findVehicleById(@Param("id") Long id);
 
-    @Query(value = "select ve from Vehicle ve order by ve.id desc")
-    Page<Vehicle> findAllVehicle(Pageable pageable);
+    @Query(value = "SELECT v.id AS idVehicle, v.registrationNumber AS registrationNumber, v.creationDate AS creationDate, v.vehicleType AS vehicleTypeDto, va.accountNumber AS accountNumber, " +
+		    		"COALESCE(SUM(t.transactionAmount), 0) AS solde, va.qrCodeImage AS qrCodeImage " +
+		    		"FROM Vehicle v " +
+		    		"JOIN v.vehicleType vt " +
+		    		"JOIN v.account va " +
+		    		"LEFT JOIN va.transactions t " +
+		    		 
+		    		"GROUP BY v.id, v.registrationNumber, v.creationDate, vt, va.accountNumber, va.qrCodeImage "
+		    		+ "ORDER BY v.id DESC ")
+    Page<VehicleProjection> findAllVehicle(Pageable pageable);
 
     @Query(value = "select ve from Vehicle ve where ve.registrationNumber = :number")
     Optional<Vehicle> findVehicleByRegistrationNumber(@Param("number") String number);
 
-    @Query(value = "select ve from Vehicle ve join VehicleType vt on ve.vehicleType.id=vt.id where UPPER(ve.registrationNumber) like CONCAT('%',UPPER(?1),'%' ) OR UPPER(vt.vehiculeTypeName) like CONCAT('%',UPPER(?1),'%' ) order by ve.id desc ")
-    Page<Vehicle> findByVehiculeRegistrationNumberLike(String search, Pageable pageable);
+    @Query(value = "SELECT v.id AS idVehicle, v.registrationNumber AS registrationNumber, v.creationDate AS creationDate, v.vehicleType AS vehicleTypeDto, va.accountNumber AS accountNumber, " +
+		    		"COALESCE(SUM(t.transactionAmount), 0) AS solde, va.qrCodeImage AS qrCodeImage " +
+		    		"FROM Vehicle v " +
+		    		"JOIN v.vehicleType vt " +
+		    		"JOIN v.account va " +
+		    		"LEFT JOIN va.transactions t " +
+		    		"WHERE UPPER(v.registrationNumber) like CONCAT('%',UPPER(?1),'%' ) " +
+		    		"OR UPPER(vt.vehiculeTypeName) like CONCAT('%',UPPER(?1),'%' ) " +
+		    		
+		    		"GROUP BY v.id, v.registrationNumber, v.creationDate, vt, va.accountNumber, va.qrCodeImage "
+		    		+ "ORDER BY v.id" )
+    Page<VehicleProjection> findByVehiculeRegistrationNumberLike(String search, Pageable pageable);
     
-    @Query("SELECT v.id AS idVehicle, v.registrationNumber AS registrationNumber, v.vehicleType AS vehicleTypeDto, va.accountNumber AS accountNumber, " +
+    @Query("SELECT v.id AS idVehicle, v.registrationNumber AS registrationNumber, v.creationDate AS creationDate, v.vehicleType AS vehicleTypeDto, va.accountNumber AS accountNumber, " +
     		"COALESCE(SUM(t.transactionAmount), 0) AS solde, va.qrCodeImage AS qrCodeImage " +
     		"FROM Vehicle v " +
     		"JOIN v.vehicleType vt " +
     		"JOIN v.account va " +
     		"LEFT JOIN va.transactions t " +
     		"WHERE v.id = :idVehicle " +
-    		"GROUP BY v.id, v.registrationNumber, vt, va.accountNumber, va.qrCodeImage")
+    		"GROUP BY v.id, v.registrationNumber, v.creationDate, vt, va.accountNumber, va.qrCodeImage")
     VehicleProjection findVehicleDetails(Long idVehicle);
     
-    @Query("SELECT v.id AS idVehicle, v.registrationNumber AS registrationNumber, v.vehicleType AS vehicleTypeDto, va.accountNumber AS accountNumber, " +
+    @Query("SELECT v.id AS idVehicle, v.registrationNumber AS registrationNumber, v.creationDate AS creationDate, v.vehicleType AS vehicleTypeDto, va.accountNumber AS accountNumber, " +
     		"COALESCE(SUM(t.transactionAmount), 0) AS solde, va.qrCodeImage AS qrCodeImage, pp.price AS price " +
     		"FROM Vehicle v " +
     		"JOIN v.vehicleType vt " +
@@ -48,7 +66,7 @@ public interface VehicleRepository extends JpaRepository<Vehicle, Long> {
     		"LEFT JOIN va.transactions t " +
     		"WHERE v.registrationNumber = :registrationNumber " +
     		"AND c.id = :idCompany " +
-    		"GROUP BY v.id, v.registrationNumber, vt, va.accountNumber, va.qrCodeImage, pp.price")
+    		"GROUP BY v.id, v.registrationNumber, v.creationDate, vt, va.accountNumber, va.qrCodeImage, pp.price")
     VehicleProjection findVehicleDetailsByRegistrationNumber(String registrationNumber, Long idCompany);
     
     List<Vehicle> findAllByVehicleTypeId(Long vehicleType_id);

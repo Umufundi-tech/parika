@@ -34,12 +34,28 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
     		+ "AND t.transactionDate = CURRENT_DATE ")
     BigDecimal findTodaysCollectionByAgent(@Param("agentId") Long agentId);
     
-    // Recuperer la liste de l'argent collecté (paiements) par un agent donné aujourd'hui
+    // Recuperer la liste de l'argent collecté (paiements) par un agent donné aujourd'hui sans search
     @Query("SELECT t FROM Transaction t "
     		+ "JOIN Payment p ON t.id = p.transaction.id "
     		+ "JOIN ParkingTicket pt ON p.parkingTicket.id = pt.id "
     		+ "WHERE pt.agent.id = :agentId "
     		+ "AND t.transactionType = 'PAYMENT' "
-    		+ "AND t.transactionDate = CURRENT_DATE")
-    List<Transaction> findTodaysTransactionsByAgent(@Param("agentId") Long agentId);
+    		+ "AND t.transactionDate = CURRENT_DATE "
+    		+ "ORDER BY t.id DESC ")
+    Page<Transaction> findTodaysTransactionsByAgentWithNoSearch(@Param("agentId") Long agentId, Pageable pageable);
+    
+    // Recuperer la liste de l'argent collecté (paiements) par un agent donné aujourd'hui avec search
+    @Query("SELECT t FROM Transaction t "
+    		+ "JOIN Payment p ON t.id = p.transaction.id "
+    		+ "JOIN ParkingTicket pt ON p.parkingTicket.id = pt.id "
+    		+ "WHERE pt.agent.id = ?1 "
+    		+ "AND t.transactionType = 'PAYMENT' "
+    		+ "AND t.transactionDate = CURRENT_DATE "
+    		+ "AND UPPER(t.transactionCode) like CONCAT('%', UPPER(?2), '%') "
+    		+ "OR UPPER(t.account.accountNumber) like CONCAT('%', UPPER(?2), '%') "
+    		+ "OR UPPER(t.account.vehicle.registrationNumber) like CONCAT('%', UPPER(?2), '%' ) "
+    		+ "ORDER BY t.id DESC ")
+    Page<Transaction> findTodaysTransactionsByAgent(@Param("agentId") Long agentId, String search, Pageable pageable);
+    
+    
 }

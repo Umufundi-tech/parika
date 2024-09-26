@@ -14,6 +14,9 @@ import com.parking.model.*;
 import com.parking.repository.*;
 import com.parking.validator.DepositValidator;
 import com.parking.validator.PaymentValidator;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.parking.exceptions.EntityNotFoundException;
@@ -211,11 +214,16 @@ public class TransactionServiceImpl implements TransactionService {
 
 
 	@Override
-	public List<TransactionDto> getTransactionsByAgent(Long agentId) {
+	public Page<TransactionDto> getTodaysTransactionsByAgent(Long agentId, String search, Pageable pageable) {
 		
-		return transactionRepository.findTodaysTransactionsByAgent(agentId).stream()
-				.map(TransactionDto::fromEntity)
-				.collect(Collectors.toList());
+		Page<Transaction> transactions;
+		if (search != null) {
+			transactions = transactionRepository.findTodaysTransactionsByAgent(agentId, search, pageable);
+		} else {
+			transactions = transactionRepository.findTodaysTransactionsByAgentWithNoSearch(agentId, pageable);
+		}
+		
+		return transactions.map(TransactionDto::fromEntity);
 	}
 
 

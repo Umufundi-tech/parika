@@ -80,17 +80,29 @@ public interface ParkingTicketApi {
     
     @Operation(summary = "Récupérer la liste de vehicules dans un parking donné", description = "Cette methode permet de chercher et renvoyer la liste des vehicules dans un parking qui existent" + "dans la BDD")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "La liste des vehicules dans un parking donné / Une liste vide")
+            @ApiResponse(responseCode = "200", description = "La liste des vehicules dans un parking donné")
     })
-    @GetMapping(value = Constants.APP_ROOT + "/parking_tickets/vehicles-in-parking/{parkingSpaceId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    List<ParkingTicketListDto> findVehiclesInParkingByParkingSpace(@PathVariable("parkingSpaceId") Long parkingSpaceId);
+    @GetMapping(value = Constants.APP_ROOT + "/parking_tickets/vehicles-in-parking/{parkingSpaceId}/{agentId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    Page<ParkingTicketListDto> findVehiclesInParkingByParkingSpace(
+            @PathVariable("parkingSpaceId") Long parkingSpaceId,
+            @PathVariable("agentId") Long agentId,
+            @RequestParam(value = "search", required = false) String search,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size
+    );
     
     @Operation(summary = "Récupérer la liste de tickets non payés", description = "Cette methode permet de chercher et renvoyer la liste des tickets non payés qui existent" + "dans la BDD")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "La liste des tickets non payés / Une liste vide")
+            @ApiResponse(responseCode = "200", description = "La liste des tickets non payés")
     })
-    @GetMapping(value = Constants.APP_ROOT + "/parking_tickets/unpaid-tickets/{agentId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    List<ParkingTicketListDto> findUnpaidTicketsByAgent(@PathVariable("agentId") Long agentId);
+    @GetMapping(value = Constants.APP_ROOT + "/parking_tickets/unpaid-tickets/{agentId}/{parkingSpaceId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    Page<ParkingTicketListDto> findUnpaidTicketsByAgent(
+            @PathVariable("agentId") Long agentId,
+            @PathVariable("parkingSpaceId") Long parkingSpaceId,
+            @RequestParam(value = "search", required = false) String search,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "size", defaultValue = "10") int size
+    );
 
     @Operation(summary = "Supprimer un ticket de parking par son ID", description = "Cette methode permet de supprimer un ticket de parking par ID")
     @ApiResponses(value = {

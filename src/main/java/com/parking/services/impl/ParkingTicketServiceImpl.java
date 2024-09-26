@@ -191,18 +191,31 @@ public class ParkingTicketServiceImpl implements ParkingTicketService {
 	}
 
 	@Override
-	public List<ParkingTicketListDto> getVehiclesInParking(Long parkingSpaceId) {
+	public Page<ParkingTicketListDto> getVehiclesInParking(Long parkingSpaceId, Long agentId, String search,
+			Pageable pageable) {
 		
-		return parkingTicketRepository.findVehiclesInParking(parkingSpaceId).stream()
-				.map(ParkingTicketListDto::fromEntity)
-				.collect(Collectors.toList());
+		Page<ParkingTicket> parkingTickets;
+		if (search != null) {
+			parkingTickets = parkingTicketRepository.findVehiclesInParking(parkingSpaceId, agentId, search, pageable);
+		} else {
+			parkingTickets = parkingTicketRepository.findVehiclesInParkingWithNoSearch(parkingSpaceId, agentId, pageable);
+		}
+		
+		return parkingTickets.map(ParkingTicketListDto::fromEntity);
 	}
 
 	@Override
-	public List<ParkingTicketListDto> getUnpaidTicketsByAgent(Long agentId) {
+	public Page<ParkingTicketListDto> getUnpaidTicketsByAgent(Long agentId, Long parkingSpaceId, String search,
+			Pageable pageable) {
 		
-		return parkingTicketRepository.findUnpaidTicketsByAgent(agentId).stream()
-				.map(ParkingTicketListDto::fromEntity)
-				.collect(Collectors.toList());
+		Page<ParkingTicket> parkingTickets;
+		if (search != null) {
+			parkingTickets = parkingTicketRepository.findUnpaidTicketsByAgent(agentId, parkingSpaceId, search, pageable);
+		} else {
+			parkingTickets = parkingTicketRepository.findUnpaidTicketsByAgentWithNoSearch(agentId, parkingSpaceId, pageable);
+		}
+		
+		return parkingTickets.map(ParkingTicketListDto::fromEntity);
 	}
+
 }

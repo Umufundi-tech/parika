@@ -38,8 +38,10 @@ public class TransactionController implements TransactionApi {
     }
 
 	@Override
-	public List<TransactionDto> findPaymentsByAgent(Long agentId) {
+	public Page<TransactionDto> findPaymentsByAgent(Long agentId, String search, int page, int size) {
 		
-		return transactionService.getTransactionsByAgent(agentId);
+		Pageable pageable = PageRequest.of(page, size);
+		return transactionService.getTodaysTransactionsByAgent(agentId, search, pageable);
 	}
+    
 }

@@ -34,7 +34,7 @@ public class VehicleController implements VehicleApi {
     }
 
     @Override
-    public Page<VehicleDto> findByVehiculeRegistrationNumber(String search, int page, int size) {
+    public Page<VehicleListDto> findByVehiculeRegistrationNumber(String search, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         return vehicleService.findByVehicleRegistrationNumber(search, pageable);
     }

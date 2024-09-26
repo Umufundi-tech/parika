@@ -44,7 +44,7 @@ public interface VehicleApi {
             @ApiResponse(responseCode = "200", description = "La liste des vehicules / Une liste vide")
     })
     @GetMapping(value = Constants.APP_ROOT + "/vehicles/all", produces = MediaType.APPLICATION_JSON_VALUE)
-    Page<VehicleDto> findByVehiculeRegistrationNumber(
+    Page<VehicleListDto> findByVehiculeRegistrationNumber(
             @RequestParam(value = "search", required = false) String search,
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "10") int size

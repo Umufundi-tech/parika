@@ -1,6 +1,7 @@
 package com.parking.dto;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 import com.parking.projection.VehicleProjection;
 
@@ -13,6 +14,7 @@ public class VehicleListDto {
 	
 	private Long idVehicle;
 	private String registrationNumber;
+	private LocalDate creationDate;
 	private VehicleTypeDto vehicleType;
 	private String accountNumber;
 	private BigDecimal solde;
@@ -27,6 +29,7 @@ public class VehicleListDto {
 		return VehicleListDto.builder()
 				.idVehicle(vehicleProjection.getIdVehicle())
 				.registrationNumber(vehicleProjection.getRegistrationNumber())
+				.creationDate(vehicleProjection.getCreationDate())
 				.vehicleType(VehicleTypeDto.fromEntity(vehicleProjection.getVehicleTypeDto()))
 				.accountNumber(vehicleProjection.getAccountNumber())
 				.solde(vehicleProjection.getSolde())

@@ -62,17 +62,45 @@ public interface ParkingTicketRepository extends JpaRepository<ParkingTicket, Lo
     		+ "AND pt.parkingTicketPaymentStatusEnum = 'UNPAID' ")
     Long countUnpaidTicketsByAgent(@Param("agentId") Long agentId);
     
-    // Recuperer la liste des vehicules qui sont dans un parking donné
+    
+    // ---------------------------------------------------------------//
+    // Recuperer la liste des vehicules qui sont dans un parking donné sans search
     @Query("SELECT pt FROM ParkingTicket pt "
     		+ "WHERE pt.parkingSpace.id = :parkingSpaceId "
-    		+ "AND pt.parkingTicketStatusEnum = 'ACTIVE' ")
-    List<ParkingTicket> findVehiclesInParking(@Param("parkingSpaceId") Long parkingSpaceId);
+    		+ "AND pt.agent.id = :agentId "
+    		+ "AND pt.parkingTicketStatusEnum = 'ACTIVE' "
+    		+ "ORDER BY pt.id DESC")
+    Page<ParkingTicket> findVehiclesInParkingWithNoSearch(@Param("parkingSpaceId") Long parkingSpaceId, @Param("agentId") Long agentId, Pageable pageable);
     
-    // Recuperer la liste des tickets impayés
+    // Recuperer la liste des vehicules qui sont dans un parking donné avec search
+    @Query("SELECT pt FROM ParkingTicket pt " +
+    		"WHERE pt.parkingSpace.id = ?1 " +
+    		"AND pt.agent.id = ?2 " +
+    		"AND pt.parkingTicketStatusEnum = 'ACTIVE' " +
+    		"AND UPPER(pt.parkingTicketNumber) like CONCAT('%',UPPER(?3),'%') " +
+    		"OR UPPER(pt.vehicle.registrationNumber) like CONCAT('%',UPPER(?3),'%') " +
+    		"ORDER BY pt.id DESC")
+    Page<ParkingTicket> findVehiclesInParking(@Param("parkingSpaceId") Long parkingSpaceId, @Param("agentId") Long agentId, String search, Pageable pageable);
+    // ------------------------------------------------------------------//
+    
+    
+    // ----------------------------------------------------------------------------------//
+    // Recuperer la liste des tickets impayés sans search
     @Query("SELECT pt FROM ParkingTicket pt "
-    		+ "WHERE pt.agent.id = :agentId "
-    		+ "AND pt.parkingTicketStatusEnum = 'CLOSED'"
-    		+ "AND pt.parkingTicketPaymentStatusEnum = 'UNPAID' ")
-    List<ParkingTicket> findUnpaidTicketsByAgent(@Param("agentId") Long agentId);
-;
+    		+ "WHERE pt.agent.id = :agentId AND pt.parkingSpace.id = :parkingSpaceId "
+    		+ "AND pt.parkingTicketStatusEnum = 'CLOSED' "
+    		+ "AND pt.parkingTicketPaymentStatusEnum = 'UNPAID' "
+    		+ "ORDER BY pt.id DESC")
+    Page<ParkingTicket> findUnpaidTicketsByAgentWithNoSearch(@Param("agentId") Long agentId, @Param("parkingSpaceId") Long parkingSpaceId, Pageable pageable);
+    
+    // Recuperer la liste des tickets impayés avec search
+    @Query("SELECT pt FROM ParkingTicket pt " +
+    		"WHERE pt.agent.id = ?1 AND pt.parkingSpace.id = ?2 " +
+    	    "AND pt.parkingTicketStatusEnum = 'CLOSED' " +
+    	    "AND pt.parkingTicketPaymentStatusEnum = 'UNPAID' " +
+    		"AND UPPER(pt.parkingTicketNumber) like CONCAT('%',UPPER(?3),'%') " +
+    		"OR UPPER(pt.vehicle.registrationNumber) like CONCAT('%',UPPER(?3),'%') " +
+    		"ORDER BY pt.id DESC")
+    Page<ParkingTicket> findUnpaidTicketsByAgent(@Param("agentId") Long agentId, @Param("parkingSpaceId") Long parkingSpaceId, String search, Pageable pageable);
+    // ------------------------------------------------------------------------------------------//
 }

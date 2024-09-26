@@ -1,8 +1,10 @@
 package com.parking.services.impl;
 
 import com.parking.dto.VehiculeAccountDto;
+import com.parking.dto.ParkingSpaceDto;
 import com.parking.dto.VehicleDto;
 import com.parking.dto.VehicleListDto;
+import com.parking.dto.VehicleTypeDto;
 import com.parking.exceptions.EntityNotFoundException;
 import com.parking.exceptions.ErrorCodes;
 import com.parking.exceptions.InvalidEntityException;
@@ -132,20 +134,28 @@ public class VehicleServiceImpl implements VehicleService {
 
     @Override
     public VehicleDto findById(Long id) {
-        return null;
+    	if(id == null) {
+			log.error("Vehicle type is null");
+		}
+		return vehicleRepository.findById(id)
+				.map(VehicleDto::fromEntity)
+				.orElseThrow(()->new EntityNotFoundException(
+						"Aucun vehicle avec l'ID = " +id+ " n' a ete trouve dans la BDD ",
+						ErrorCodes.VEHICLE_NOT_FOUND)
+						);
     }
 
     @Override
-    public Page<VehicleDto> findByVehicleRegistrationNumber(String search, Pageable pageable) {
+    public Page<VehicleListDto> findByVehicleRegistrationNumber(String search, Pageable pageable) {
 
-        Page<Vehicle> vehicles;
+        Page<VehicleProjection> vehicles;
         if (search != null) {
             vehicles = vehicleRepository.findByVehiculeRegistrationNumberLike(search, pageable);
         } else {
             // If no category is provided, fetch all products
             vehicles = vehicleRepository.findAllVehicle(pageable);
         }
-        return vehicles.map(VehicleDto::fromEntity);
+        return vehicles.map(VehicleListDto::fromEntity);
     }
 
     @Override
@@ -187,4 +197,5 @@ public class VehicleServiceImpl implements VehicleService {
 		}
 		return VehicleListDto.fromEntity(vehicleProjection);
 	}
+	
 }

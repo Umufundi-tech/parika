@@ -66,14 +66,19 @@ public class ParkingTicketController implements ParkingTicketApi {
 	}
 
 	@Override
-	public List<ParkingTicketListDto> findVehiclesInParkingByParkingSpace(Long parkingSpaceId) {
+	public Page<ParkingTicketListDto> findVehiclesInParkingByParkingSpace(Long parkingSpaceId, Long agentId,
+			String search, int page, int size) {
 		
-		return parkingTicketService.getVehiclesInParking(parkingSpaceId);
+		Pageable pageable = PageRequest.of(page, size);
+		return parkingTicketService.getVehiclesInParking(parkingSpaceId, agentId, search, pageable);
 	}
 
 	@Override
-	public List<ParkingTicketListDto> findUnpaidTicketsByAgent(Long agentId) {
+	public Page<ParkingTicketListDto> findUnpaidTicketsByAgent(Long agentId, Long parkingSpaceId, String search,
+			int page, int size) {
 		
-		return parkingTicketService.getUnpaidTicketsByAgent(agentId);
+		Pageable pageable = PageRequest.of(page, size);
+		return parkingTicketService.getUnpaidTicketsByAgent(agentId, parkingSpaceId, search, pageable);
 	}
+	
 }
