@@ -95,9 +95,8 @@ public interface ParkingTicketApi {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "La liste des tickets non payés")
     })
-    @GetMapping(value = Constants.APP_ROOT + "/parking_tickets/unpaid-tickets/{agentId}/{parkingSpaceId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    Page<ParkingTicketListDto> findUnpaidTicketsByAgent(
-            @PathVariable("agentId") Long agentId,
+    @GetMapping(value = Constants.APP_ROOT + "/parking_tickets/unpaid-tickets/{parkingSpaceId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    Page<ParkingTicketListDto> findUnpaidTicketsByParkingSpace(
             @PathVariable("parkingSpaceId") Long parkingSpaceId,
             @RequestParam(value = "search", required = false) String search,
             @RequestParam(value = "page", defaultValue = "0") int page,

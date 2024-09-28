@@ -205,14 +205,14 @@ public class ParkingTicketServiceImpl implements ParkingTicketService {
 	}
 
 	@Override
-	public Page<ParkingTicketListDto> getUnpaidTicketsByAgent(Long agentId, Long parkingSpaceId, String search,
+	public Page<ParkingTicketListDto> getUnpaidTicketsByParkingSpace(Long parkingSpaceId, String search,
 			Pageable pageable) {
 		
 		Page<ParkingTicket> parkingTickets;
 		if (search != null) {
-			parkingTickets = parkingTicketRepository.findUnpaidTicketsByAgent(agentId, parkingSpaceId, search, pageable);
+			parkingTickets = parkingTicketRepository.findUnpaidTicketsByParkingSpace(parkingSpaceId, search, pageable);
 		} else {
-			parkingTickets = parkingTicketRepository.findUnpaidTicketsByAgentWithNoSearch(agentId, parkingSpaceId, pageable);
+			parkingTickets = parkingTicketRepository.findUnpaidTicketsByParkingSpaceWithNoSearch(parkingSpaceId, pageable);
 		}
 		
 		return parkingTickets.map(ParkingTicketListDto::fromEntity);

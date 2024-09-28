@@ -87,21 +87,21 @@ public interface ParkingTicketRepository extends JpaRepository<ParkingTicket, Lo
     // ----------------------------------------------------------------------------------//
     // Recuperer la liste des tickets impayés sans search
     @Query("SELECT pt FROM ParkingTicket pt "
-    		+ "WHERE pt.agent.id = :agentId AND pt.parkingSpace.id = :parkingSpaceId "
+    		+ "WHERE pt.parkingSpace.id = :parkingSpaceId "
     		+ "AND pt.parkingTicketStatusEnum = 'CLOSED' "
     		+ "AND pt.parkingTicketPaymentStatusEnum = 'UNPAID' "
     		+ "ORDER BY pt.id DESC")
-    Page<ParkingTicket> findUnpaidTicketsByAgentWithNoSearch(@Param("agentId") Long agentId, @Param("parkingSpaceId") Long parkingSpaceId, Pageable pageable);
+    Page<ParkingTicket> findUnpaidTicketsByParkingSpaceWithNoSearch(@Param("parkingSpaceId") Long parkingSpaceId, Pageable pageable);
     
     // Recuperer la liste des tickets impayés avec search
     @Query("SELECT pt FROM ParkingTicket pt " +
-    		"WHERE pt.agent.id = ?1 AND pt.parkingSpace.id = ?2 " +
+    		"WHERE pt.parkingSpace.id = ?1 " +
     	    "AND pt.parkingTicketStatusEnum = 'CLOSED' " +
     	    "AND pt.parkingTicketPaymentStatusEnum = 'UNPAID' " +
-    		"AND UPPER(pt.parkingTicketNumber) like CONCAT('%',UPPER(?3),'%') " +
-    		"OR UPPER(pt.vehicle.registrationNumber) like CONCAT('%',UPPER(?3),'%') " +
+    		"AND UPPER(pt.parkingTicketNumber) like CONCAT('%',UPPER(?2),'%') " +
+    		"OR UPPER(pt.vehicle.registrationNumber) like CONCAT('%',UPPER(?2),'%') " +
     		"ORDER BY pt.id DESC")
-    Page<ParkingTicket> findUnpaidTicketsByAgent(@Param("agentId") Long agentId, @Param("parkingSpaceId") Long parkingSpaceId, String search, Pageable pageable);
+    Page<ParkingTicket> findUnpaidTicketsByParkingSpace(@Param("parkingSpaceId") Long parkingSpaceId, String search, Pageable pageable);
     // ------------------------------------------------------------------------------------------//
     
 }

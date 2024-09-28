@@ -26,7 +26,7 @@ public interface ParkingTicketService {
     
     Page<ParkingTicketListDto> getVehiclesInParking(Long parkingSpaceId, Long agentId, String search, Pageable pageable);
     
-    Page<ParkingTicketListDto> getUnpaidTicketsByAgent(Long agentId, Long parkingSpaceId, String search, Pageable pageable);
+    Page<ParkingTicketListDto> getUnpaidTicketsByParkingSpace(Long parkingSpaceId, String search, Pageable pageable);
 
     void delete (Long id);
 }

@@ -68,7 +68,8 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
     		+ "AND ("
     		+ " (:startDate IS NULL AND :endDate IS NULL AND t.transactionDate = CURRENT_DATE) "
     		+ " OR (t.transactionDate >= :startDate AND t.transactionDate <= :endDate) "
-    		+ ")")
+    		+ ") "
+    		+ "ORDER BY t.id DESC")
     Page<Transaction> findTransactionByAgent(
 		@Param("agentId") Long agentId, 
 		@Param("startDate") LocalDate startDate, 
@@ -105,7 +106,8 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
     	       + "AND ("
     	       + " (:startDate IS NULL AND :endDate IS NULL AND t.transactionDate = CURRENT_DATE) "
     	       + " OR (t.transactionDate >= :startDate AND t.transactionDate <= :endDate) "
-    	       + ")")
+    	       + ") "
+    	       + "ORDER BY t.id DESC")
 	Page<Transaction> findTransactionsByCompanyAndParkingSpace(
 	        @Param("companyId") Long companyId, 
 	        @Param("parkingSpaceId") Long parkingSpaceId, 
