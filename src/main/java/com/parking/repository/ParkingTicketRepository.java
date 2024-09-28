@@ -103,4 +103,5 @@ public interface ParkingTicketRepository extends JpaRepository<ParkingTicket, Lo
     		"ORDER BY pt.id DESC")
     Page<ParkingTicket> findUnpaidTicketsByAgent(@Param("agentId") Long agentId, @Param("parkingSpaceId") Long parkingSpaceId, String search, Pageable pageable);
     // ------------------------------------------------------------------------------------------//
+    
 }

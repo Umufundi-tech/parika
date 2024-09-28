@@ -1,5 +1,6 @@
 package com.parking.controller;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import com.parking.dto.DepositDto;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.parking.controller.api.TransactionApi;
 import com.parking.dto.TransactionDto;
+import com.parking.dto.TransactionSummaryDto;
 import com.parking.services.TransactionService;
 
 @RestController
@@ -42,6 +44,22 @@ public class TransactionController implements TransactionApi {
 		
 		Pageable pageable = PageRequest.of(page, size);
 		return transactionService.getTodaysTransactionsByAgent(agentId, search, pageable);
+	}
+
+	@Override
+	public TransactionSummaryDto findTransactionsWithTotalAmountByAgent(Long agentId, LocalDate startDate,
+			LocalDate endDate, int page, int size) {
+		
+		Pageable pageable = PageRequest.of(page, size);
+		return transactionService.getAgentTransactionsWithTotalAmount(agentId, startDate, endDate, pageable);
+	}
+
+	@Override
+	public TransactionSummaryDto findTransactionsWithTotalAmountByCompany(Long companyId, Long parkingSpaceId,
+			LocalDate startDate, LocalDate endDate, int page, int size) {
+		
+		Pageable pageable = PageRequest.of(page, size);
+		return transactionService.getCompanyTransactionsWithTotalAmount(companyId, parkingSpaceId, startDate, endDate, pageable);
 	}
     
 }

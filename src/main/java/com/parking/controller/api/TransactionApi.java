@@ -1,5 +1,6 @@
 package com.parking.controller.api;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import com.parking.dto.DepositSaveDto;
@@ -7,6 +8,7 @@ import com.parking.dto.ParkingSpaceDto;
 import com.parking.dto.PaymentSaveDto;
 
 import org.springframework.data.domain.Page;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.parking.dto.TransactionDto;
+import com.parking.dto.TransactionSummaryDto;
 import com.parking.utils.Constants;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -52,6 +55,34 @@ public interface TransactionApi {
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "10") int size
     );
+    
+    @Operation(summary = "Récupérer la liste des transactions d'un agent avec la somme totale")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Liste des transactions et la somme totale")
+    })
+    @GetMapping(value = "/transactions/agent-summary/{agentId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    TransactionSummaryDto findTransactionsWithTotalAmountByAgent(
+        @PathVariable("agentId") Long agentId,
+        @RequestParam(value = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+        @RequestParam(value = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+        @RequestParam(value = "page", defaultValue = "0") int page,
+        @RequestParam(value = "size", defaultValue = "10") int size
+    );
+    
+    @Operation(summary = "Récupérer la liste des transactions d'une entreprise avec la somme totale")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Liste des transactions et la somme totale")
+    })
+    @GetMapping(value = "/transactions/company-summary/{companyId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    TransactionSummaryDto findTransactionsWithTotalAmountByCompany(
+        @PathVariable("companyId") Long companyId,
+        @RequestParam(value = "parkingSpaceId", required = false) Long parkingSpaceId,
+        @RequestParam(value = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+        @RequestParam(value = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+        @RequestParam(value = "page", defaultValue = "0") int page,
+        @RequestParam(value = "size", defaultValue = "10") int size
+    );
+
 
 
 }

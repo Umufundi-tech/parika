@@ -227,6 +227,42 @@ public class TransactionServiceImpl implements TransactionService {
 	}
 
 
+	@Override
+	public TransactionSummaryDto getAgentTransactionsWithTotalAmount(Long agentId, LocalDate startDate, LocalDate endDate,
+			Pageable pageable) {
+		
+		// Recuperer les transactions
+		Page<Transaction> transactions = transactionRepository.findTransactionByAgent(agentId, startDate, endDate, pageable);
+		
+		// Calculer la somme des transactions
+		BigDecimal totalAmount = transactionRepository.findTotalTransactionAmountByAgent(agentId, startDate, endDate);
+		
+		// Convertit les transactions en TransactionDto
+		Page<TransactionDto> transactionDtos = transactions.map(TransactionDto::fromEntity);
+		
+		// Crée et renvoie un objet TransactionSummaryDto
+		return TransactionSummaryDto.create(totalAmount, transactionDtos);
+	}
+
+
+	@Override
+	public TransactionSummaryDto getCompanyTransactionsWithTotalAmount(Long companyId, Long parkingSpaceId,
+			LocalDate startDate, LocalDate endDate, Pageable pageable) {
+		
+		// Recuperer les transactions
+		Page<Transaction> transactions = transactionRepository.findTransactionsByCompanyAndParkingSpace(companyId, parkingSpaceId, startDate, endDate, pageable);
+		
+		// Calculer la somme des transactions
+		BigDecimal totalAmount = transactionRepository.findTotalTransactionAmountByCompanyAndParkingSpace(companyId, parkingSpaceId, startDate, endDate);
+		
+		// Convertit les transactions en TransactionSummaryDto
+		Page<TransactionDto> transactionDtos = transactions.map(TransactionDto::fromEntity);
+		
+		// Crée et renvoie un objet TransactionSummaryDto
+		return TransactionSummaryDto.create(totalAmount, transactionDtos);
+	}
+
+
 //	@Override
 //	public void delete(Long id) {
 //		if(id == null) {
