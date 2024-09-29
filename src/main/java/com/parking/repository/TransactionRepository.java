@@ -97,7 +97,7 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
     	       + "JOIN Payment p ON t.id = p.transaction.id "
     	       + "JOIN ParkingTicket pt ON p.parkingTicket.id = pt.id "
     	       + "WHERE pt.company.id = :companyId "
-    	       + "AND (pt.parkingSpace.id = :parkingSpaceId OR :parkingSpaceId IS NULL) "
+    	       + "AND pt.parkingSpace.id = :parkingSpaceId "
     	       + "AND t.transactionType = 'PAYMENT' "
     	       + "AND t.transactionDate = CURRENT_DATE "
     	       + "OR t.transactionDate BETWEEN :startDate AND :endDate "
