@@ -65,10 +65,8 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
     		+ "JOIN ParkingTicket pt ON p.parkingTicket.id = pt.id "
     		+ "WHERE pt.agent.id = :agentId "
     		+ "AND t.transactionType = 'PAYMENT' "
-    		+ "AND ("
-    		+ " (:startDate IS NULL AND :endDate IS NULL AND t.transactionDate = CURRENT_DATE) "
-    		+ " OR (t.transactionDate >= :startDate AND t.transactionDate <= :endDate) "
-    		+ ") "
+    		+ "AND t.transactionDate = CURRENT_DATE "
+ 	        + "OR t.transactionDate BETWEEN :startDate AND :endDate "
     		+ "ORDER BY t.id DESC")
     Page<Transaction> findTransactionByAgent(
 		@Param("agentId") Long agentId, 
@@ -83,10 +81,8 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
     	       + "JOIN ParkingTicket pt ON p.parkingTicket.id = pt.id "
     	       + "WHERE pt.agent.id = :agentId "
     	       + "AND t.transactionType = 'PAYMENT' "
-    	       + "AND ("
-    	       + " (:startDate IS NULL AND :endDate IS NULL AND t.transactionDate = CURRENT_DATE) "
-    	       + " OR (t.transactionDate >= :startDate AND t.transactionDate <= :endDate) "
-    	       + ")")
+    	       + "AND t.transactionDate = CURRENT_DATE "
+    	       + "OR t.transactionDate BETWEEN :startDate AND :endDate")
     BigDecimal findTotalTransactionAmountByAgent(
 	    @Param("agentId") Long agentId, 
 	    @Param("startDate") LocalDate startDate, 
@@ -103,10 +99,8 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
     	       + "WHERE pt.company.id = :companyId "
     	       + "AND (pt.parkingSpace.id = :parkingSpaceId OR :parkingSpaceId IS NULL) "
     	       + "AND t.transactionType = 'PAYMENT' "
-    	       + "AND ("
-    	       + " (:startDate IS NULL AND :endDate IS NULL AND t.transactionDate = CURRENT_DATE) "
-    	       + " OR (t.transactionDate >= :startDate AND t.transactionDate <= :endDate) "
-    	       + ") "
+    	       + "AND t.transactionDate = CURRENT_DATE "
+    	       + "OR t.transactionDate BETWEEN :startDate AND :endDate "
     	       + "ORDER BY t.id DESC")
 	Page<Transaction> findTransactionsByCompanyAndParkingSpace(
 	        @Param("companyId") Long companyId, 
@@ -121,12 +115,10 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
     	       + "JOIN Payment p ON t.id = p.transaction.id "
     	       + "JOIN ParkingTicket pt ON p.parkingTicket.id = pt.id "
     	       + "WHERE pt.company.id = :companyId "
-    	       + "AND (pt.parkingSpace.id = :parkingSpaceId OR :parkingSpaceId IS NULL) "
+    	       + "AND pt.parkingSpace.id = :parkingSpaceId "
     	       + "AND t.transactionType = 'PAYMENT' "
-    	       + "AND ("
-    	       + " (:startDate IS NULL AND :endDate IS NULL AND t.transactionDate = CURRENT_DATE) "
-    	       + " OR (t.transactionDate >= :startDate AND t.transactionDate <= :endDate) "
-    	       + ")")
+    	       + "AND t.transactionDate = CURRENT_DATE "
+    	       + "OR t.transactionDate BETWEEN :startDate AND :endDate")
 	BigDecimal findTotalTransactionAmountByCompanyAndParkingSpace(
 	        @Param("companyId") Long companyId, 
 	        @Param("parkingSpaceId") Long parkingSpaceId, 
