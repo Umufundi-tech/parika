@@ -261,10 +261,42 @@ public class TransactionServiceImpl implements TransactionService {
 			LocalDate startDate, LocalDate endDate, Pageable pageable) {
 		
 		// Recuperer les transactions
-		Page<Transaction> transactions = transactionRepository.findTransactionsByCompanyAndParkingSpace(companyId, parkingSpaceId, startDate, endDate, pageable);
+		Page<Transaction> transactions = null;
+		if (startDate == null && endDate == null) {
+			
+			if (parkingSpaceId == null) {
+				transactions = transactionRepository.findTransactionsByCompanyWithNoStartAndEndDate(companyId, pageable);
+			} else {
+				transactions = transactionRepository.findTransactionsByCompanyAndParkingSpaceWithNoStartAndEndDate(companyId, parkingSpaceId, pageable);
+			}
+			
+		} else {
+			
+			if (parkingSpaceId == null) {
+				transactions = transactionRepository.findTransactionsByCompany(companyId, startDate, endDate, pageable);
+			} else {
+				transactions = transactionRepository.findTransactionsByCompanyAndParkingSpace(companyId, parkingSpaceId, startDate, endDate, pageable);
+			}
+		}
 		
 		// Calculer la somme des transactions
-		BigDecimal totalAmount = transactionRepository.findTotalTransactionAmountByCompanyAndParkingSpace(companyId, parkingSpaceId, startDate, endDate);
+		BigDecimal totalAmount = BigDecimal.ZERO;
+		if (startDate == null && endDate == null) {
+			
+			if (parkingSpaceId == null) {
+				totalAmount = transactionRepository.findTotalTransactionAmountByCompanyWithNoStartAndEndDate(companyId);
+			} else {
+				totalAmount = transactionRepository.findTotalTransactionAmountByCompanyAndParkingSpaceWithNoStartAndEndDate(companyId, parkingSpaceId);
+			}
+			
+		} else {
+			
+			if (parkingSpaceId == null) {
+				totalAmount = transactionRepository.findTotalTransactionAmountByCompany(companyId, startDate, endDate);
+			} else {
+				totalAmount = transactionRepository.findTotalTransactionAmountByCompanyAndParkingSpace(companyId, parkingSpaceId, startDate, endDate);
+			}
+		}
 		
 		// Convertit les transactions en TransactionSummaryDto
 		Page<TransactionDto> transactionDtos = transactions.map(TransactionDto::fromEntity);
