@@ -39,7 +39,7 @@ public class TransactionDto {
                 .transactionCode(transaction.getTransactionCode())
                 .account(VehiculeAccountDto.fromEntity(transaction.getAccount()))
                 .transactionType(transaction.getTransactionType())
-                .transactionAmount(transaction.getTransactionAmount())
+                .transactionAmount(transaction.getTransactionAmount().abs())
                 .transactionDate(transaction.getTransactionDate())
                 .build();
     }

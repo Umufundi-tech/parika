@@ -232,10 +232,21 @@ public class TransactionServiceImpl implements TransactionService {
 			Pageable pageable) {
 		
 		// Recuperer les transactions
-		Page<Transaction> transactions = transactionRepository.findTransactionByAgent(agentId, startDate, endDate, pageable);
+		Page<Transaction> transactions = null;
+		if (startDate == null && endDate == null) {
+			// If both startDate and endDate are null, return all today collections
+			transactions = transactionRepository.findTodaysTransactionsByAgentWithNoSearch(agentId, pageable);
+		} else {
+			transactions = transactionRepository.findTransactionByAgent(agentId, startDate, endDate, pageable);
+		}
 		
 		// Calculer la somme des transactions
-		BigDecimal totalAmount = transactionRepository.findTotalTransactionAmountByAgent(agentId, startDate, endDate);
+		BigDecimal totalAmount = BigDecimal.ZERO;
+		if (startDate == null && endDate == null) {
+			totalAmount = transactionRepository.findTodaysCollectionByAgent(agentId);
+		} else {
+			totalAmount = transactionRepository.findTotalTransactionAmountByAgent(agentId, startDate, endDate);
+		}
 		
 		// Convertit les transactions en TransactionDto
 		Page<TransactionDto> transactionDtos = transactions.map(TransactionDto::fromEntity);

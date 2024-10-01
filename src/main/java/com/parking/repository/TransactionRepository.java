@@ -25,7 +25,7 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
     BigDecimal accountSold(@Param("accountId") Long accountId);
     
     // Recuperer la somme de l'argent d'un agent collecte par jour
-    @Query("SELECT COALESCE(SUM(t.transactionAmount), 0) "
+    @Query("SELECT COALESCE(SUM(t.transactionAmount * -1), 0) "
     		+ "FROM Transaction t "
     		+ "JOIN Payment p ON t.id = p.transaction.id "
     		+ "JOIN ParkingTicket pt ON p.parkingTicket.id = pt.id "
@@ -63,11 +63,9 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
     @Query("SELECT t FROM Transaction t "
     		+ "JOIN Payment p ON t.id = p.transaction.id "
     		+ "JOIN ParkingTicket pt ON p.parkingTicket.id = pt.id "
- 	        + "JOIN Agent a ON pt.agent.id = a.id "
- 	        + "WHERE (:agentId IS NULL OR a.id = :agentId) "
+    		+ "WHERE pt.agent.id = :agentId "
     		+ "AND t.transactionType = 'PAYMENT' "
-    		+ "AND (t.transactionDate = CURRENT_DATE "
- 	        + "OR (t.transactionDate BETWEEN :startDate AND :endDate)) "
+ 	        + "AND t.transactionDate BETWEEN :startDate AND :endDate "
     		+ "ORDER BY t.id DESC")
     Page<Transaction> findTransactionByAgent(
 		@Param("agentId") Long agentId, 
@@ -77,14 +75,12 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
     );
     
     // Recuperer la somme des transactions
-    @Query("SELECT COALESCE(SUM(t.transactionAmount), 0) FROM Transaction t "
+    @Query("SELECT COALESCE(SUM(t.transactionAmount * -1), 0) FROM Transaction t "
     	       + "JOIN Payment p ON t.id = p.transaction.id "
     	       + "JOIN ParkingTicket pt ON p.parkingTicket.id = pt.id "
-    	       + "JOIN Agent a ON pt.agent.id = a.id "
-    	       + "WHERE (:agentId IS NULL OR a.id = :agentId) "
-    	       + "AND t.transactionType = 'PAYMENT' "
-    	       + "AND (t.transactionDate = CURRENT_DATE "
-    	       + "OR (t.transactionDate BETWEEN :startDate AND :endDate)) ")
+    	       + "WHERE pt.agent.id = :agentId "
+       		   + "AND t.transactionType = 'PAYMENT' "
+       		   + "AND t.transactionDate BETWEEN :startDate AND :endDate ")
     BigDecimal findTotalTransactionAmountByAgent(
 	    @Param("agentId") Long agentId, 
 	    @Param("startDate") LocalDate startDate, 
