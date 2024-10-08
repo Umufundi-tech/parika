@@ -19,7 +19,7 @@ public interface VehicleService {
     
     VehicleListDto getVehicleDetails(Long idVehicle);
     
-    VehicleListDto getVehicleDetailsByRegistrationNumber(String registrationNumber, Long idCompany);
+    VehicleListDto getVehicleDetailsByRegistrationNumber(String registrationNumber);
 
     void delete(Long id);
 }

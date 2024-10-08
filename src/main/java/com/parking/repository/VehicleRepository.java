@@ -61,13 +61,11 @@ public interface VehicleRepository extends JpaRepository<Vehicle, Long> {
     		"FROM Vehicle v " +
     		"JOIN v.vehicleType vt " +
     		"LEFT JOIN vt.parkingPrices pp " +
-    		"JOIN pp.company c " +
     		"JOIN v.account va " +
     		"LEFT JOIN va.transactions t " +
     		"WHERE v.registrationNumber = :registrationNumber " +
-    		"AND c.id = :idCompany " +
     		"GROUP BY v.id, v.registrationNumber, v.creationDate, vt, va.accountNumber, va.qrCodeImage, pp.price")
-    VehicleProjection findVehicleDetailsByRegistrationNumber(String registrationNumber, Long idCompany);
+    VehicleProjection findVehicleDetailsByRegistrationNumber(String registrationNumber);
     
     List<Vehicle> findAllByVehicleTypeId(Long vehicleType_id);
     
