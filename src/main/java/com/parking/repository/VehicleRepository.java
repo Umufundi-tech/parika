@@ -25,7 +25,6 @@ public interface VehicleRepository extends JpaRepository<Vehicle, Long> {
 		    		"JOIN v.vehicleType vt " +
 		    		"JOIN v.account va " +
 		    		"LEFT JOIN va.transactions t " +
-		    		 
 		    		"GROUP BY v.id, v.registrationNumber, v.creationDate, vt, va.accountNumber, va.qrCodeImage "
 		    		+ "ORDER BY v.id DESC ")
     Page<VehicleProjection> findAllVehicle(Pageable pageable);
@@ -61,11 +60,13 @@ public interface VehicleRepository extends JpaRepository<Vehicle, Long> {
     		"FROM Vehicle v " +
     		"JOIN v.vehicleType vt " +
     		"LEFT JOIN vt.parkingPrices pp " +
+    		"JOIN pp.company c " +
     		"JOIN v.account va " +
     		"LEFT JOIN va.transactions t " +
     		"WHERE v.registrationNumber = :registrationNumber " +
+    		"AND c.id = :idCompany " +
     		"GROUP BY v.id, v.registrationNumber, v.creationDate, vt, va.accountNumber, va.qrCodeImage, pp.price")
-    VehicleProjection findVehicleDetailsByRegistrationNumber(String registrationNumber);
+    VehicleProjection findVehicleDetailsByRegistrationNumber(String registrationNumber, Long idCompany);
     
     List<Vehicle> findAllByVehicleTypeId(Long vehicleType_id);
     

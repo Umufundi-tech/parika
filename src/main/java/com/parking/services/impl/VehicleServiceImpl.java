@@ -188,9 +188,9 @@ public class VehicleServiceImpl implements VehicleService {
 
 
 	@Override
-	public VehicleListDto getVehicleDetailsByRegistrationNumber(String registrationNumber) {
+	public VehicleListDto getVehicleDetailsByRegistrationNumber(String registrationNumber, Long idCompany) {
 		
-		VehicleProjection vehicleProjection = vehicleRepository.findVehicleDetailsByRegistrationNumber(registrationNumber);
+		VehicleProjection vehicleProjection = vehicleRepository.findVehicleDetailsByRegistrationNumber(registrationNumber, idCompany);
 		if(vehicleProjection == null) {
 			throw new EntityNotFoundException("Aucun vehicule avec le numero de plaque = " +registrationNumber+ " n'a été trouvé dans la BDD", 
 					ErrorCodes.VEHICLE_NOT_FOUND);

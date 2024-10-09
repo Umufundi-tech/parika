@@ -61,8 +61,8 @@ public interface VehicleApi {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "La liste des informations detaillés d'un vehicule / Une liste vide")
     })
-    @GetMapping(value = Constants.APP_ROOT + "/vehicles/all-details-by-registrationNumber/{registrationNumber}", produces = MediaType.APPLICATION_JSON_VALUE)
-    VehicleListDto getVehicleDetailsByRegistrationNumber(@PathVariable("registrationNumber") String registrationNumber);
+    @GetMapping(value = Constants.APP_ROOT + "/vehicles/all-details-by-registrationNumber/{registrationNumber}/{idCompany}", produces = MediaType.APPLICATION_JSON_VALUE)
+    VehicleListDto getVehicleDetailsByRegistrationNumber(@PathVariable("registrationNumber") String registrationNumber, @PathVariable("idCompany") Long idCompany);
 
     @Operation(summary = "Supprimer un vehicule par son ID", description = "Cette methode permet de supprimer un vehicule par ID")
     @ApiResponses(value = {
