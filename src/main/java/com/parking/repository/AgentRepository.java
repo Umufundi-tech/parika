@@ -5,6 +5,8 @@ import java.util.List;
 import com.parking.model.Admin;
 import com.parking.model.ParkingSpace;
 import com.parking.model.Superadmin;
+import com.parking.model.User;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -25,8 +27,14 @@ public interface AgentRepository extends JpaRepository<Agent, Long> {
 
 	@Query(value = "select ag from Agent ag join User u on ag.user.id = u.id where ag.company.id=?1 AND UPPER(u.userFullName) like CONCAT('%',UPPER(?2),'%' ) OR UPPER(u.userEmail) like CONCAT('%',UPPER(?2),'%' ) OR UPPER(u.userPhoneNumber) like CONCAT('%',UPPER(?2),'%' ) order by ag.id desc ")
 	Page<Agent> findByNameEmailPhoneLike(Long idCompany,String search, Pageable pageable);
+	
+	@Query(value = "select ag from Agent ag where ag.company.id = :companyId order by ag.id desc")
+	List<Agent> findAgentsByCompany(Long companyId);
 
 	List<Agent> findAllByParkingSpaceId(Long parkingSpace_id);
 	
 	List<Agent> findAllByCompanyId(Long company_id);
+	
+	Agent findByUser(User user);
+	
 }

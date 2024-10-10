@@ -257,25 +257,33 @@ public class TransactionServiceImpl implements TransactionService {
 
 
 	@Override
-	public TransactionSummaryDto getCompanyTransactionsWithTotalAmount(Long companyId, Long parkingSpaceId,
+	public TransactionSummaryDto getCompanyTransactionsWithTotalAmount(Long companyId, Long parkingSpaceId, Long agentId,
 			LocalDate startDate, LocalDate endDate, Pageable pageable) {
 		
 		// Recuperer les transactions
 		Page<Transaction> transactions = null;
 		if (startDate == null && endDate == null) {
 			
-			if (parkingSpaceId == null) {
+			if (parkingSpaceId == null && agentId == null) {
 				transactions = transactionRepository.findTransactionsByCompanyWithNoStartAndEndDate(companyId, pageable);
-			} else {
+			} else if (parkingSpaceId != null && agentId == null) {
 				transactions = transactionRepository.findTransactionsByCompanyAndParkingSpaceWithNoStartAndEndDate(companyId, parkingSpaceId, pageable);
+			} else if (parkingSpaceId == null && agentId != null) {
+				transactions = transactionRepository.findTransactionsByCompanyAndAgentWithNoStartAndEndDate(companyId, agentId, pageable);
+			} else {
+				transactions = transactionRepository.findTransactionsByCompanyParkingSpaceAgentWithNoStartAndEndDate(companyId, parkingSpaceId, agentId, pageable);
 			}
 			
 		} else {
 			
-			if (parkingSpaceId == null) {
+			if (parkingSpaceId == null && parkingSpaceId == null) {
 				transactions = transactionRepository.findTransactionsByCompany(companyId, startDate, endDate, pageable);
-			} else {
+			} else if (parkingSpaceId != null && agentId == null) {
 				transactions = transactionRepository.findTransactionsByCompanyAndParkingSpace(companyId, parkingSpaceId, startDate, endDate, pageable);
+			} else if (parkingSpaceId == null && agentId != null) {
+				transactions = transactionRepository.findTransactionsByCompanyAndAgent(companyId, agentId, startDate, endDate, pageable);
+			} else {
+				transactions = transactionRepository.findTransactionsByCompanyParkingSpaceAndAgent(companyId, parkingSpaceId, agentId, startDate, endDate, pageable);
 			}
 		}
 		
@@ -283,18 +291,26 @@ public class TransactionServiceImpl implements TransactionService {
 		BigDecimal totalAmount = BigDecimal.ZERO;
 		if (startDate == null && endDate == null) {
 			
-			if (parkingSpaceId == null) {
+			if (parkingSpaceId == null && agentId == null) {
 				totalAmount = transactionRepository.findTotalTransactionAmountByCompanyWithNoStartAndEndDate(companyId);
-			} else {
+			} else if (parkingSpaceId != null && agentId ==null) {
 				totalAmount = transactionRepository.findTotalTransactionAmountByCompanyAndParkingSpaceWithNoStartAndEndDate(companyId, parkingSpaceId);
+			} else if (parkingSpaceId == null && agentId != null) {
+				totalAmount = transactionRepository.findTotalTransactionAmountByCompanyAndAgentIdWithNoStartAndEndDate(companyId, agentId);
+			} else {
+				totalAmount = transactionRepository.findTotalTransactionAmountByCompanyParkingSpaceAndAgentWithNoStartAndEndDate(companyId, parkingSpaceId, agentId);
 			}
 			
 		} else {
 			
-			if (parkingSpaceId == null) {
+			if (parkingSpaceId == null && agentId == null) {
 				totalAmount = transactionRepository.findTotalTransactionAmountByCompany(companyId, startDate, endDate);
-			} else {
+			} else if (parkingSpaceId != null && agentId == null) {
 				totalAmount = transactionRepository.findTotalTransactionAmountByCompanyAndParkingSpace(companyId, parkingSpaceId, startDate, endDate);
+			} else if (parkingSpaceId == null && agentId != null) {
+				totalAmount = transactionRepository.findTotalTransactionAmountByCompanyAndAgent(companyId, agentId, startDate, endDate);
+			} else {
+				totalAmount = transactionRepository.findTotalTransactionAmountByCompanyParkingSpaceAndAgent(companyId, parkingSpaceId, agentId, startDate, endDate);
 			}
 		}
 		

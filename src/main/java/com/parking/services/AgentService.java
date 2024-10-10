@@ -17,5 +17,7 @@ public interface AgentService {
 
 	Page<AgentDto> findCompanyAgents(Long idCompany, String search, Pageable pageable);
 	
+	List<AgentDto> findAgentsByCompany(Long companyId);
+	
 	void delete(Long id);
 }

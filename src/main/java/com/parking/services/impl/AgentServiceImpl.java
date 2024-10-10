@@ -13,6 +13,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.parking.exceptions.EntityNotFoundException;
@@ -31,12 +32,14 @@ public class AgentServiceImpl implements AgentService {
 	private final AgentRepository agentRepository;
 	private final UserRepository userRepository;
 	private final MailSenderService mailService;
+//	private final PasswordEncoder passwordEncoder;
 	
 	@Autowired
 	public AgentServiceImpl(AgentRepository agentRepository, UserRepository userRepository, MailSenderService mailService) {
 		this.agentRepository = agentRepository;
 		this.userRepository = userRepository;
 		this.mailService = mailService;
+//		this.passwordEncoder = passwordEncoder;
 	}
 
 	@Override
@@ -65,6 +68,7 @@ public class AgentServiceImpl implements AgentService {
 			agentDto.getUser().setUserRoleEnum(UserRoleEnum.AGENT);
 			agentDto.getUser().setIsUserActive(true);
 			agentDto.getUser().setUserPassword(generateCommonLangPassword());
+//			agentDto.getUser().setUserPassword(passwordEncoder.encode(noEncrypted_password));
 
 			UserDto savedUser = UserDto.fromEntity(
 					userRepository.save(UserDto.toEntity(agentDto.getUser()))
@@ -100,9 +104,12 @@ public class AgentServiceImpl implements AgentService {
 		}
 
 		String pswd="";
+		String newNoEncryptPassword="";
 		if (!agentDto.getUser().getUserEmail().equals(userEmail(agentDto.getUser().getId())) ){
-
+			
 			pswd=generateCommonLangPassword();
+//			newNoEncryptPassword=generateCommonLangPassword();
+//			pswd=passwordEncoder.encode(newNoEncryptPassword);
 		}
 		else{
 			//get existing password
@@ -246,5 +253,13 @@ public class AgentServiceImpl implements AgentService {
 		agentRepository.delete(agent);
 		userRepository.delete(user);
 		
+	}
+
+	@Override
+	public List<AgentDto> findAgentsByCompany(Long companyId) {
+		
+		return agentRepository.findAgentsByCompany(companyId).stream()
+				.map(AgentDto::fromEntity)
+				.collect(Collectors.toList());
 	}
 }

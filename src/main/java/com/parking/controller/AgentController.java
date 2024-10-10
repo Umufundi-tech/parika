@@ -53,4 +53,10 @@ public class AgentController implements AgentApi {
 
 	}
 
+	@Override
+	public List<AgentDto> findAgentsByCompany(Long companyId) {
+		
+		return agentService.findAgentsByCompany(companyId);
+	}
+
 }

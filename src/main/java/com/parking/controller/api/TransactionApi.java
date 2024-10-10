@@ -77,6 +77,7 @@ public interface TransactionApi {
     TransactionSummaryDto findTransactionsWithTotalAmountByCompany(
         @PathVariable("companyId") Long companyId,
         @RequestParam(value = "parkingSpaceId", required = false) Long parkingSpaceId,
+        @RequestParam(value = "agentId", required = false) Long agentId,
         @RequestParam(value = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
         @RequestParam(value = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
         @RequestParam(value = "page", defaultValue = "0") int page,

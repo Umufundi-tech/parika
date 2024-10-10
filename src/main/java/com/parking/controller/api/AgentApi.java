@@ -51,6 +51,13 @@ public interface AgentApi {
             @RequestParam(value = "page", defaultValue = "0") int page,
             @RequestParam(value = "size", defaultValue = "10") int size
     );
+    
+    @Operation(summary = "Récupérer la liste de tous les agents par entreprise", description = "Cette methode permet de chercher et renvoyer la liste des agents qui existent" + "dans la BDD")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "La liste des agents / Une liste vide")
+    })
+    @GetMapping(value = Constants.APP_ROOT + "/agents/company-with-no-search-and-pagination/{companyId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    List<AgentDto> findAgentsByCompany(@PathVariable("companyId") Long companyId);
 
     @Operation(summary = "Supprimer un agent par son ID", description = "Cette methode permet de supprimer un agent par ID")
     @ApiResponses(value = {

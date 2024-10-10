@@ -124,6 +124,76 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
 	        Pageable pageable
 	);
     
+  //------------------------WHERE COMPANY, PARKING SPACE AND AGENT------------------//
+    // Recuperer la liste des transactions des entreprises (companies)
+    @Query("SELECT t FROM Transaction t "
+    	       + "JOIN Payment p ON t.id = p.transaction.id "
+    	       + "JOIN ParkingTicket pt ON p.parkingTicket.id = pt.id "
+    	       + "WHERE pt.company.id = :companyId "
+    	       + "AND pt.parkingSpace.id = :parkingSpaceId "
+    	       + "AND pt.agent.id = :agentId "
+    	       + "AND t.transactionType = 'PAYMENT' "
+    	       + "AND t.transactionDate BETWEEN :startDate AND :endDate "
+    	       + "ORDER BY t.id DESC")
+	Page<Transaction> findTransactionsByCompanyParkingSpaceAndAgent(
+	        @Param("companyId") Long companyId, 
+	        @Param("parkingSpaceId") Long parkingSpaceId, 
+	        @Param("agentId") Long agentId,
+	        @Param("startDate") LocalDate startDate, 
+	        @Param("endDate") LocalDate endDate, 
+	        Pageable pageable
+	);
+    
+    // Recuperer la liste des transactions des entreprises (companies) sans startDate et endDate
+    @Query("SELECT t FROM Transaction t "
+ 	       + "JOIN Payment p ON t.id = p.transaction.id "
+ 	       + "JOIN ParkingTicket pt ON p.parkingTicket.id = pt.id "
+ 	       + "WHERE pt.company.id = :companyId "
+ 	       + "AND pt.parkingSpace.id = :parkingSpaceId "
+ 	       + "AND pt.agent.id = :agentId "
+ 	       + "AND t.transactionType = 'PAYMENT' "
+ 	       + "AND t.transactionDate = CURRENT_DATE "
+ 	       + "ORDER BY t.id DESC")
+	Page<Transaction> findTransactionsByCompanyParkingSpaceAgentWithNoStartAndEndDate(
+	        @Param("companyId") Long companyId, 
+	        @Param("parkingSpaceId") Long parkingSpaceId, 
+	        @Param("agentId") Long agentId,
+	        Pageable pageable
+	);
+    
+  //------------------------WHERE COMPANY AND AGENT------------------//
+    // Recuperer la liste des transactions des entreprises (companies)
+    @Query("SELECT t FROM Transaction t "
+    	       + "JOIN Payment p ON t.id = p.transaction.id "
+    	       + "JOIN ParkingTicket pt ON p.parkingTicket.id = pt.id "
+    	       + "WHERE pt.company.id = :companyId "
+    	       + "AND pt.agent.id = :agentId "
+    	       + "AND t.transactionType = 'PAYMENT' "
+    	       + "AND t.transactionDate BETWEEN :startDate AND :endDate "
+    	       + "ORDER BY t.id DESC")
+	Page<Transaction> findTransactionsByCompanyAndAgent(
+	        @Param("companyId") Long companyId, 
+	        @Param("agentId") Long agentId, 
+	        @Param("startDate") LocalDate startDate, 
+	        @Param("endDate") LocalDate endDate, 
+	        Pageable pageable
+	);
+    
+    // Recuperer la liste des transactions des entreprises (companies) sans startDate et endDate
+    @Query("SELECT t FROM Transaction t "
+ 	       + "JOIN Payment p ON t.id = p.transaction.id "
+ 	       + "JOIN ParkingTicket pt ON p.parkingTicket.id = pt.id "
+ 	       + "WHERE pt.company.id = :companyId "
+ 	       + "AND pt.agent.id = :agentId "
+ 	       + "AND t.transactionType = 'PAYMENT' "
+ 	       + "AND t.transactionDate = CURRENT_DATE "
+ 	       + "ORDER BY t.id DESC")
+	Page<Transaction> findTransactionsByCompanyAndAgentWithNoStartAndEndDate(
+	        @Param("companyId") Long companyId, 
+	        @Param("agentId") Long agentId, 
+	        Pageable pageable
+	);
+    
     
     //----------------------WHERE COMPANY ONLY----------------------------//
     // Recuperer la liste des transactions des entreprises (companies)
@@ -201,6 +271,68 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
 	BigDecimal findTotalTransactionAmountByCompanyAndParkingSpaceWithNoStartAndEndDate(
 	        @Param("companyId") Long companyId, 
 	        @Param("parkingSpaceId") Long parkingSpaceId
+	);
+    
+  //-------------------------WHERE COMPANY, PARKING SPACE AND AGENT-------------------------//
+    // Recuperer la somme des transactions des entreprises (companies)
+    @Query("SELECT COALESCE(SUM(t.transactionAmount * -1), 0) FROM Transaction t "
+    		   + "JOIN Payment p ON t.id = p.transaction.id "
+ 	           + "JOIN ParkingTicket pt ON p.parkingTicket.id = pt.id "
+ 	           + "WHERE pt.company.id = :companyId "
+   	           + "AND pt.parkingSpace.id = :parkingSpaceId "
+   	           + "AND pt.agent.id = :agentId "
+   	           + "AND t.transactionType = 'PAYMENT' "
+    	       + "AND t.transactionDate BETWEEN :startDate AND :endDate ")
+	BigDecimal findTotalTransactionAmountByCompanyParkingSpaceAndAgent(
+	        @Param("companyId") Long companyId, 
+	        @Param("parkingSpaceId") Long parkingSpaceId, 
+	        @Param("agentId") Long agentId,
+	        @Param("startDate") LocalDate startDate, 
+	        @Param("endDate") LocalDate endDate
+	);
+    
+    // Recuperer la somme des transactions des entreprises (companies)sans startDate && endDate
+    @Query("SELECT COALESCE(SUM(t.transactionAmount * -1), 0) FROM Transaction t "
+    		   + "JOIN Payment p ON t.id = p.transaction.id "
+ 	           + "JOIN ParkingTicket pt ON p.parkingTicket.id = pt.id "
+ 	           + "WHERE pt.company.id = :companyId "
+   	           + "AND pt.parkingSpace.id = :parkingSpaceId "
+   	           + "AND pt.agent.id = :agentId "
+   	           + "AND t.transactionType = 'PAYMENT' "
+    	       + "AND t.transactionDate = CURRENT_DATE ")
+	BigDecimal findTotalTransactionAmountByCompanyParkingSpaceAndAgentWithNoStartAndEndDate(
+	        @Param("companyId") Long companyId, 
+	        @Param("parkingSpaceId") Long parkingSpaceId,
+	        @Param("agentId") Long agentId
+	);
+    
+  //-------------------------WHERE COMPANY AND AGENT-------------------------//
+    // Recuperer la somme des transactions des entreprises (companies)
+    @Query("SELECT COALESCE(SUM(t.transactionAmount * -1), 0) FROM Transaction t "
+    		   + "JOIN Payment p ON t.id = p.transaction.id "
+ 	           + "JOIN ParkingTicket pt ON p.parkingTicket.id = pt.id "
+ 	           + "WHERE pt.company.id = :companyId "
+   	           + "AND pt.agent.id = :agentId "
+   	           + "AND t.transactionType = 'PAYMENT' "
+    	       + "AND t.transactionDate BETWEEN :startDate AND :endDate ")
+	BigDecimal findTotalTransactionAmountByCompanyAndAgent(
+	        @Param("companyId") Long companyId, 
+	        @Param("agentId") Long agentId, 
+	        @Param("startDate") LocalDate startDate, 
+	        @Param("endDate") LocalDate endDate
+	);
+    
+    // Recuperer la somme des transactions des entreprises (companies)sans startDate && endDate
+    @Query("SELECT COALESCE(SUM(t.transactionAmount * -1), 0) FROM Transaction t "
+    		   + "JOIN Payment p ON t.id = p.transaction.id "
+ 	           + "JOIN ParkingTicket pt ON p.parkingTicket.id = pt.id "
+ 	           + "WHERE pt.company.id = :companyId "
+   	           + "AND pt.agent.id = :agentId "
+   	           + "AND t.transactionType = 'PAYMENT' "
+    	       + "AND t.transactionDate = CURRENT_DATE ")
+	BigDecimal findTotalTransactionAmountByCompanyAndAgentIdWithNoStartAndEndDate(
+	        @Param("companyId") Long companyId, 
+	        @Param("agentId") Long agentId
 	);
     
     //---------------------WHERE COMPANY ONLY--------------------------------//
