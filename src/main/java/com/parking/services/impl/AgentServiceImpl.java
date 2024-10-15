@@ -13,6 +13,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 //import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -32,14 +33,14 @@ public class AgentServiceImpl implements AgentService {
 	private final AgentRepository agentRepository;
 	private final UserRepository userRepository;
 	private final MailSenderService mailService;
-//	private final PasswordEncoder passwordEncoder;
+	private final PasswordEncoder passwordEncoder;
 	
 	@Autowired
-	public AgentServiceImpl(AgentRepository agentRepository, UserRepository userRepository, MailSenderService mailService) {
+	public AgentServiceImpl(AgentRepository agentRepository, UserRepository userRepository, MailSenderService mailService, PasswordEncoder passwordEncoder) {
 		this.agentRepository = agentRepository;
 		this.userRepository = userRepository;
 		this.mailService = mailService;
-//		this.passwordEncoder = passwordEncoder;
+		this.passwordEncoder = passwordEncoder;
 	}
 
 	@Override
@@ -67,8 +68,8 @@ public class AgentServiceImpl implements AgentService {
 			String noEncrypted_password=generateCommonLangPassword();
 			agentDto.getUser().setUserRoleEnum(UserRoleEnum.AGENT);
 			agentDto.getUser().setIsUserActive(true);
-			agentDto.getUser().setUserPassword(generateCommonLangPassword());
-//			agentDto.getUser().setUserPassword(passwordEncoder.encode(noEncrypted_password));
+//			agentDto.getUser().setUserPassword(generateCommonLangPassword());
+			agentDto.getUser().setUserPassword(passwordEncoder.encode(noEncrypted_password));
 
 			UserDto savedUser = UserDto.fromEntity(
 					userRepository.save(UserDto.toEntity(agentDto.getUser()))
@@ -107,9 +108,9 @@ public class AgentServiceImpl implements AgentService {
 		String newNoEncryptPassword="";
 		if (!agentDto.getUser().getUserEmail().equals(userEmail(agentDto.getUser().getId())) ){
 			
-			pswd=generateCommonLangPassword();
-//			newNoEncryptPassword=generateCommonLangPassword();
-//			pswd=passwordEncoder.encode(newNoEncryptPassword);
+//			pswd=generateCommonLangPassword();
+			newNoEncryptPassword=generateCommonLangPassword();
+			pswd=passwordEncoder.encode(newNoEncryptPassword);
 		}
 		else{
 			//get existing password

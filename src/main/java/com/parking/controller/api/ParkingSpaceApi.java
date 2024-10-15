@@ -45,7 +45,7 @@ public interface ParkingSpaceApi {
             @ApiResponse(responseCode = "200", description = "La liste des places de parking / Une liste vide")
     })
     @GetMapping(value = Constants.APP_ROOT + "/parking_spaces/company/{idCompany}", produces = MediaType.APPLICATION_JSON_VALUE)
-    Page<ParkingSpaceDto> findByVehiculeTypeName(
+    Page<ParkingSpaceDto> findParkingSpaceByCompanyId(
             @PathVariable("idCompany") Long idCompany,
             @RequestParam(value = "search", required = false) String search,
             @RequestParam(value = "page", defaultValue = "0") int page,

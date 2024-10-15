@@ -41,7 +41,7 @@ public class ParkingSpaceController implements ParkingSpaceApi {
     }
 
     @Override
-    public Page<ParkingSpaceDto> findByVehiculeTypeName(Long idCompany, String search, int page, int size) {
+    public Page<ParkingSpaceDto> findParkingSpaceByCompanyId(Long idCompany, String search, int page, int size) {
 
         Pageable pageable = PageRequest.of(page, size);
         return parkingSpaceService.findByNameLike(idCompany,search,pageable);

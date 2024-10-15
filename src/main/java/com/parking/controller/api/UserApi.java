@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import com.parking.dto.ChangerMotDePasseUtilisateurDto;
 import com.parking.dto.UserDto;
 import com.parking.utils.Constants;
 
@@ -43,4 +44,7 @@ public interface UserApi {
     })
     @PutMapping(value = Constants.APP_ROOT + "/users/desable/{id}")
     void desableUser(@PathVariable("id") Long id);
+    
+    @PostMapping(value = Constants.APP_ROOT + "/users/update/password")
+    UserDto changerMotDePasse(@RequestBody ChangerMotDePasseUtilisateurDto dto);
 }

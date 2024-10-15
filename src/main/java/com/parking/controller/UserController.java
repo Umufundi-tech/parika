@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.parking.controller.api.UserApi;
+import com.parking.dto.ChangerMotDePasseUtilisateurDto;
 import com.parking.dto.UserDto;
 import com.parking.services.UserService;
 
@@ -40,6 +41,12 @@ public class UserController implements UserApi {
 	public void desableUser(Long id) {
 
 		userService.desableUser(id);
+	}
+
+	@Override
+	public UserDto changerMotDePasse(ChangerMotDePasseUtilisateurDto dto) {
+		
+		return userService.changerMotDePasse(dto);
 	}
 
 }

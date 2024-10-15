@@ -34,6 +34,8 @@ public interface AdminRepository extends JpaRepository<Admin, Long> {
 	Page<Admin> findCompanyAdminsByNameEmailPhoneLike(Long idCompany,String search, Pageable pageable);
 
 	List<Admin> findAllByCompanyId(Long company_id);
+	
+	Admin findByUser(User user);
 
 
 

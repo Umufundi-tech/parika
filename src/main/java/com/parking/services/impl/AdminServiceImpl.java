@@ -13,6 +13,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.parking.exceptions.EntityNotFoundException;
@@ -31,12 +32,14 @@ public class AdminServiceImpl implements AdminService {
 	private final AdminRepository adminRepository;
 	private final UserRepository userRepository;
 	private final MailSenderService mailService;
+	private final PasswordEncoder passwordEncoder;
 	
 	@Autowired
-	public AdminServiceImpl(AdminRepository adminRepository, UserRepository userRepository, MailSenderService mailService) {
+	public AdminServiceImpl(AdminRepository adminRepository, UserRepository userRepository, MailSenderService mailService, PasswordEncoder passwordEncoder) {
 		this.adminRepository = adminRepository;
 		this.userRepository = userRepository;
 		this.mailService = mailService;
+		this.passwordEncoder = passwordEncoder;
 	}
 	
 	@Override
@@ -73,7 +76,8 @@ public class AdminServiceImpl implements AdminService {
 			String noEncrypted_password=generateCommonLangPassword();
 			adminDto.getUser().setUserRoleEnum(UserRoleEnum.ADMIN);
 			adminDto.getUser().setIsUserActive(true);
-			adminDto.getUser().setUserPassword(generateCommonLangPassword());
+//			adminDto.getUser().setUserPassword(generateCommonLangPassword());
+			adminDto.getUser().setUserPassword(passwordEncoder.encode(noEncrypted_password));
 
 			UserDto savedUser = UserDto.fromEntity(
 					userRepository.save(UserDto.toEntity(adminDto.getUser()))
@@ -110,10 +114,12 @@ public class AdminServiceImpl implements AdminService {
 		}
 
 		String pswd="";
+		String newNoEncryptPassword="";
 		if (!adminDto.getUser().getUserEmail().equals(userEmail(adminDto.getUser().getId())) ){
 
 			//change existing password and send new password to new user
-			pswd=generateCommonLangPassword();
+			newNoEncryptPassword = generateCommonLangPassword();
+			pswd=passwordEncoder.encode(newNoEncryptPassword);
 		}
 		else{
 			//get existing password

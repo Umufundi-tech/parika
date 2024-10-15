@@ -6,11 +6,14 @@ import java.util.Optional;
 
 import com.parking.model.Admin;
 import com.parking.model.VehicleType;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.parking.model.Superadmin;
+import com.parking.model.User;
+
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -28,5 +31,5 @@ public interface SuperadminRepository extends JpaRepository<Superadmin, Long> {
 	@Query(value = "select s from Superadmin s where s.id = :id")
 	Superadmin findSuperAdminById(@Param("id") Long id);
 
-	
+	Superadmin findByUser(User user);
 }
