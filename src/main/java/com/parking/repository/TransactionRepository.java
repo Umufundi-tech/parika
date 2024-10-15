@@ -359,6 +359,98 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
 	BigDecimal findTotalTransactionAmountByCompanyWithNoStartAndEndDate(
 		    @Param("companyId") Long companyId
 	);
+	
+	//--------------------------FOR SUPERADMIN------------------------------------//
+	// Recuperer la liste des transactions des entreprises (companies)
+    @Query("SELECT t FROM Transaction t "
+    	       + "JOIN Payment p ON t.id = p.transaction.id "
+    	       + "JOIN ParkingTicket pt ON p.parkingTicket.id = pt.id "
+    	       + "WHERE pt.company.id = :companyId "
+    	       + "AND t.transactionType = 'PAYMENT' "
+    	       + "AND t.transactionDate BETWEEN :startDate AND :endDate "
+    	       + "ORDER BY t.id DESC")
+	Page<Transaction> findAllTransactionsByCompany(
+	        @Param("companyId") Long companyId, 
+	        @Param("startDate") LocalDate startDate, 
+	        @Param("endDate") LocalDate endDate, 
+	        Pageable pageable
+	);
+    
+    // Recuperer la liste des transactions des entreprises (companies) sans startDate et endDate
+    @Query("SELECT t FROM Transaction t "
+ 	       + "JOIN Payment p ON t.id = p.transaction.id "
+ 	       + "JOIN ParkingTicket pt ON p.parkingTicket.id = pt.id "
+ 	       + "WHERE pt.company.id = :companyId "
+ 	       + "AND t.transactionType = 'PAYMENT' "
+ 	       + "AND t.transactionDate = CURRENT_DATE "
+ 	       + "ORDER BY t.id DESC")
+	Page<Transaction> findAllTransactionsByCompanyWithNoStartAndEndDate(
+	        @Param("companyId") Long companyId, 
+	        Pageable pageable
+	);
+    
+    // Recuperer la liste des transactions des entreprises (companies)
+    @Query("SELECT t FROM Transaction t "
+    	       + "JOIN Payment p ON t.id = p.transaction.id "
+    	       + "WHERE t.transactionType = 'PAYMENT' "
+    	       + "AND t.transactionDate BETWEEN :startDate AND :endDate "
+    	       + "ORDER BY t.id DESC")
+	Page<Transaction> findAllTransactions(
+	        @Param("startDate") LocalDate startDate, 
+	        @Param("endDate") LocalDate endDate, 
+	        Pageable pageable
+	);
+    
+    // Recuperer la liste des transactions des entreprises (companies) sans startDate et endDate
+    @Query("SELECT t FROM Transaction t "
+ 	       + "JOIN Payment p ON t.id = p.transaction.id "
+ 	       + "WHERE t.transactionType = 'PAYMENT' "
+ 	       + "AND t.transactionDate = CURRENT_DATE "
+ 	       + "ORDER BY t.id DESC")
+	Page<Transaction> findAllTransactionsWithNoStartAndEndDate(
+	        Pageable pageable
+	);
+    
+    // Recuperer la somme des transactions des entreprises (companies)
+    @Query("SELECT COALESCE(SUM(t.transactionAmount * -1), 0) FROM Transaction t "
+ 		   + "JOIN Payment p ON t.id = p.transaction.id "
+	           + "JOIN ParkingTicket pt ON p.parkingTicket.id = pt.id "
+	           + "WHERE pt.company.id = :companyId "
+	           + "AND t.transactionType = 'PAYMENT' "
+ 	       + "AND t.transactionDate BETWEEN :startDate AND :endDate ")
+	BigDecimal findTotalTransactionAmountByCompanyId(
+	        @Param("companyId") Long companyId, 
+	        @Param("startDate") LocalDate startDate, 
+	        @Param("endDate") LocalDate endDate
+	);
+ 
+	// Recuperer la somme des transactions des entreprises (companies) sans startDate && endDate
+	@Query("SELECT COALESCE(SUM(t.transactionAmount * -1), 0) FROM Transaction t "
+		 		   + "JOIN Payment p ON t.id = p.transaction.id "
+			       + "JOIN ParkingTicket pt ON p.parkingTicket.id = pt.id "
+		           + "WHERE pt.company.id = :companyId "
+		           + "AND t.transactionType = 'PAYMENT' "
+	 	           + "AND t.transactionDate = CURRENT_DATE ")
+	BigDecimal findTotalTransactionAmountByCompanyIdWithNoStartAndEndDate(
+		    @Param("companyId") Long companyId
+	);
+	
+	// Recuperer la somme des transactions des entreprises (companies)
+    @Query("SELECT COALESCE(SUM(t.transactionAmount * -1), 0) FROM Transaction t "
+ 		   	   + "JOIN Payment p ON t.id = p.transaction.id "
+	           + "WHERE t.transactionType = 'PAYMENT' "
+ 	           + "AND t.transactionDate BETWEEN :startDate AND :endDate ")
+	BigDecimal findTotalTransactionAmount(
+	        @Param("startDate") LocalDate startDate, 
+	        @Param("endDate") LocalDate endDate
+	);
+ 
+	// Recuperer la somme des transactions des entreprises (companies) sans startDate && endDate
+	@Query("SELECT COALESCE(SUM(t.transactionAmount * -1), 0) FROM Transaction t "
+		 		   + "JOIN Payment p ON t.id = p.transaction.id "
+		           + "WHERE t.transactionType = 'PAYMENT' "
+	 	           + "AND t.transactionDate = CURRENT_DATE ")
+	BigDecimal findTotalTransactionAmountWithNoStartAndEndDate();
 
     
 }

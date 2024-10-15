@@ -322,6 +322,46 @@ public class TransactionServiceImpl implements TransactionService {
 	}
 
 
+	@Override
+	public TransactionSummaryDto getAllTransactionsWithTotalAmount(Long companyId, LocalDate startDate,
+			LocalDate endDate, Pageable pageable) {
+		
+		Page<Transaction> transactions = null;
+		if (startDate == null && endDate == null) {
+			if (companyId == null) {
+				transactions = transactionRepository.findAllTransactionsWithNoStartAndEndDate(pageable);
+			} else {
+				transactions = transactionRepository.findAllTransactionsByCompanyWithNoStartAndEndDate(companyId, pageable);
+			}
+		} else {
+			if (companyId == null) {
+				transactions = transactionRepository.findAllTransactions(startDate, endDate, pageable);
+			} else {
+				transactions = transactionRepository.findAllTransactionsByCompany(companyId, startDate, endDate, pageable);
+			}
+		}
+		
+		BigDecimal totalAmount = BigDecimal.ZERO;
+		if (startDate == null && endDate == null) {
+			if (companyId == null) {
+				totalAmount = transactionRepository.findTotalTransactionAmountWithNoStartAndEndDate();
+			} else {
+				totalAmount = transactionRepository.findTotalTransactionAmountByCompanyWithNoStartAndEndDate(companyId);
+			}
+		} else {
+			if (companyId == null) {
+				totalAmount = transactionRepository.findTotalTransactionAmount(startDate, endDate);
+			} else {
+				totalAmount = transactionRepository.findTotalTransactionAmountByCompany(companyId, startDate, endDate);
+			}
+		}
+		
+		Page<TransactionDto> transactionDtos = transactions.map(TransactionDto::fromEntity);
+		
+		return TransactionSummaryDto.create(totalAmount, transactionDtos);
+	}
+
+
 //	@Override
 //	public void delete(Long id) {
 //		if(id == null) {

@@ -21,4 +21,6 @@ public interface TransactionService {
     
     TransactionSummaryDto getCompanyTransactionsWithTotalAmount(Long companyId, Long parkingSpaceId, Long agentId, LocalDate startDate, LocalDate endDate, Pageable pageable);
     
+    TransactionSummaryDto getAllTransactionsWithTotalAmount(Long companyId, LocalDate startDate, LocalDate endDate, Pageable pageable);
+    
 }

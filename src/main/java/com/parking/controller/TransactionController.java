@@ -61,5 +61,13 @@ public class TransactionController implements TransactionApi {
 		Pageable pageable = PageRequest.of(page, size);
 		return transactionService.getCompanyTransactionsWithTotalAmount(companyId, parkingSpaceId, agentId, startDate, endDate, pageable);
 	}
+
+	@Override
+	public TransactionSummaryDto findAllTransactionsWithTotalAmount(Long companyId, LocalDate startDate,
+			LocalDate endDate, int page, int size) {
+		
+		Pageable pageable = PageRequest.of(page, size);
+		return transactionService.getAllTransactionsWithTotalAmount(companyId, startDate, endDate, pageable);
+	}
     
 }

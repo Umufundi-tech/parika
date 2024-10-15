@@ -83,6 +83,19 @@ public interface TransactionApi {
         @RequestParam(value = "page", defaultValue = "0") int page,
         @RequestParam(value = "size", defaultValue = "10") int size
     );
+    
+    @Operation(summary = "Récupérer la liste des transactions des entreprises avec la somme totale")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Liste des transactions et la somme totale")
+    })
+    @GetMapping(value = "/transactions/companies-summary", produces = MediaType.APPLICATION_JSON_VALUE)
+    TransactionSummaryDto findAllTransactionsWithTotalAmount(
+        @RequestParam(value = "companyId", required = false) Long companyId,
+        @RequestParam(value = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+        @RequestParam(value = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+        @RequestParam(value = "page", defaultValue = "0") int page,
+        @RequestParam(value = "size", defaultValue = "10") int size
+    );
 
 
 
