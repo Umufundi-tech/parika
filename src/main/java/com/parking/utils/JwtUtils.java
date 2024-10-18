@@ -84,6 +84,7 @@ public class JwtUtils {
             claims.put("agentId", userDetails.getAgent().getId());
             claims.put("company_id", userDetails.getAgent().getCompany().getId());
             claims.put("parkingSpace_id", userDetails.getAgent().getParkingSpace().getId());
+            claims.put("parkingSpace_name", userDetails.getAgent().getParkingSpace().getName());
         }
         return createToken(claims, userDetails);
     }
