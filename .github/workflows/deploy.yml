@@ -21,6 +21,6 @@ jobs:
      - name: Deploy to VPS
        run: |
          ssh -o StrictHostKeyChecking=no deployer-elam@${{ secrets.VPS_HOST }} << 'EOF'
-           cd /var/www/my-app/parika-app-api
+           cd /var/www/my-apps/parika-app-api
            git pull origin master  
          EOF
