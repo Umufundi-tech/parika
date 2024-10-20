@@ -22,5 +22,6 @@ jobs:
        run: |
          ssh -o StrictHostKeyChecking=no deployer-elam@${{ secrets.VPS_HOST }} << 'EOF'
            cd /var/www/my-apps/parika-app-api
+           git config --global --add safe.directory /var/www/my-apps/parika-app-api
            git pull origin master  
          EOF
