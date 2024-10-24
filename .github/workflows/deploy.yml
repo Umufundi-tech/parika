@@ -1,1 +1,43 @@
+name: Deploy to VPS
 
+on:
+  push:
+    branches:
+      - master  # Change this to your main branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up SSH
+        uses: webfactory/ssh-agent@v0.5.3
+        with:
+          ssh-private-key: ${{ secrets.VPS_SSH_KEY }}
+
+      - name: Deploy to VPS
+        run: |
+          ssh -o StrictHostKeyChecking=no deployer-elam@${{ secrets.VPS_HOST }} << 'EOF'
+
+            # Navigate to the directory where your application is
+            cd /var/www/my-apps/parika-app-api/
+            git config --global --add safe.directory /var/www/my-apps/parika-app-api
+
+            # Pull the latest code
+            git pull origin master
+           
+            # Build JAR file (assuming you're using Maven)
+            ./mvn clean package  # Or use `mvn clean package` if you have Maven installed
+
+            # Build Docker image
+            docker build -t parika-app .  # Adjust 'my-app' as needed
+
+            # Stop and remove existing containers
+            docker-compose down
+           
+            # Start the containers
+            docker-compose up -d
+          EOF
