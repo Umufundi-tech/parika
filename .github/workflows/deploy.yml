@@ -29,12 +29,4 @@ jobs:
             # Pull the latest code
             git pull origin master
            
-            # Build JAR file (assuming you're using Maven)
-            ./mvn clean package  # Or use `mvn clean package` if you have Maven installed
-
-            # Navigate to the directory where docker-compose.yml file is located
-            cd /var/www/my-apps/
-
-            # Rebuild only the specific container
-            sudo docker-compose up -d spring-boot-app
           EOF
