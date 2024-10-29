@@ -29,4 +29,7 @@ public interface ParkingSpaceRepository extends JpaRepository<ParkingSpace, Long
 
     @Query("select p from ParkingSpace p where p.company.id=?1 ")
     List<ParkingSpace> findCompanyParkingSpaces(Long idCompany);
+    
+    @Query("SELECT COUNT(ps) FROM ParkingSpace ps WHERE ps.company.id = :companyId")
+    Long countByCompanyId(@Param("companyId") Long companyId);
 }

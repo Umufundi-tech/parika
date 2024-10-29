@@ -37,4 +37,7 @@ public interface AgentRepository extends JpaRepository<Agent, Long> {
 	
 	Agent findByUser(User user);
 	
+	@Query("SELECT COUNT(a) FROM Agent a WHERE a.company.id = :companyId")
+	Long countByCompanyId(@Param("companyId") Long companyId);
+	
 }
