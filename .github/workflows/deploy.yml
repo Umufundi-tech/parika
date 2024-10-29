@@ -35,7 +35,7 @@ jobs:
             # Navigate to the directory where docker-compose.yml file is located
             cd /var/www/my-apps/
 
-            # Rebuild only the specific container
-            docker-compose up -d spring-boot-app
+            # Rebuild and restart the Spring Boot container
+            docker-compose up -d --build spring-boot-app
           
           EOF
