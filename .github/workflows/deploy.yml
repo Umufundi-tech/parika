@@ -28,16 +28,14 @@ jobs:
 
             # Pull the latest code
             git pull origin master
-           
+
             # Build JAR file (assuming you're using Maven)
-            ./mvn clean package  # Or use `mvn clean package` if you have Maven installed
+            mvn clean package  # Or use `mvn clean package` if you have Maven installed
 
-            # Build Docker image
-            docker build -t parika-app .  # Adjust 'my-app' as needed
+            # Navigate to the directory where docker-compose.yml file is located
+            cd /var/www/my-apps/
 
-            # Stop and remove existing containers
-            docker-compose down
-           
-            # Start the containers
-            docker-compose up -d
+            # Rebuild only the specific container
+            docker-compose up -d spring-boot-app
+          
           EOF
