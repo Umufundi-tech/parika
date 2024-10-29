@@ -36,6 +36,6 @@ jobs:
             cd /var/www/my-apps/
 
             # Rebuild only the specific container
-            sudo docker-compose up -d spring-boot-app
+            docker-compose up -d spring-boot-app
           
           EOF
