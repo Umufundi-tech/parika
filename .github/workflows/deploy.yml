@@ -37,5 +37,5 @@ jobs:
 
             # Rebuild only the specific container
             sudo docker-compose up -d spring-boot-app
-           
+          
           EOF
