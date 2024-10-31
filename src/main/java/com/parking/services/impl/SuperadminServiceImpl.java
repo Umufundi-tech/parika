@@ -98,6 +98,8 @@ public class SuperadminServiceImpl implements SuperadminService {
 
 		//update section
 		User existingUser=userRepository.findUserByIdUser(superadminDto.getUser().getId());
+		String existingEmail = existingUser != null ? existingUser.getUserEmail() : null;
+		
 		if (existingUser !=null && !existingUser.getUserEmail().equals(superadminDto.getUser().getUserEmail())){
 
 			if (userAlreadyExists(superadminDto.getUser().getUserEmail())){
@@ -116,7 +118,7 @@ public class SuperadminServiceImpl implements SuperadminService {
 		}
 		String pswd="";
 		String newNoEncryptPassword="";
-		if (!superadminDto.getUser().getUserEmail().equals(userEmail(superadminDto.getUser().getId())) ){
+		if (!superadminDto.getUser().getUserEmail().equals(existingEmail) ){
 			//change existing password and send new password to new user
 			newNoEncryptPassword=generateCommonLangPassword();
 			pswd=passwordEncoder.encode(newNoEncryptPassword);
@@ -135,9 +137,11 @@ public class SuperadminServiceImpl implements SuperadminService {
 		userRepository.save(user);
 		SuperadminDto savedSuperAdmin=SuperadminDto.fromEntity(superadminRepository.save(SuperadminDto.toEntity(superadminDto)));
 
-		if (!superadminDto.getUser().getUserEmail().equals(userEmail(superadminDto.getUser().getId())) ){
+		if (!superadminDto.getUser().getUserEmail().equals(existingEmail) ){
 			//send email
-			mailService.sendNewMail(superadminDto.getUser().getUserEmail().trim(), "Passord", "Dear user, this is your password "+pswd);
+			mailService.sendNewMail(superadminDto.getUser().getUserEmail().trim(), "Passord", "Dear user, this is your password "+newNoEncryptPassword);
+		} else {
+			log.info("No email sent");
 		}
 		
 		return savedSuperAdmin;

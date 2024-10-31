@@ -88,6 +88,8 @@ public class AgentServiceImpl implements AgentService {
 
 		//update section
 		User existingUser=userRepository.findUserByIdUser(agentDto.getUser().getId());
+		String existingEmail = existingUser != null ? existingUser.getUserEmail() : null;
+		
 		if (existingUser !=null && !existingUser.getUserEmail().equals(agentDto.getUser().getUserEmail())){
 
 			if (userAlreadyExists(agentDto.getUser().getUserEmail())){
@@ -106,7 +108,7 @@ public class AgentServiceImpl implements AgentService {
 
 		String pswd="";
 		String newNoEncryptPassword="";
-		if (!agentDto.getUser().getUserEmail().equals(userEmail(agentDto.getUser().getId())) ){
+		if (!agentDto.getUser().getUserEmail().equals(existingEmail) ){
 			
 //			pswd=generateCommonLangPassword();
 			newNoEncryptPassword=generateCommonLangPassword();
@@ -128,10 +130,12 @@ public class AgentServiceImpl implements AgentService {
 
 		AgentDto savedAgent=AgentDto.fromEntity(agentRepository.save(AgentDto.toEntity(agentDto)));
 
-		if (!agentDto.getUser().getUserEmail().equals(userEmail(agentDto.getUser().getId())) ){
+		if (!agentDto.getUser().getUserEmail().equals(existingEmail) ){
 
 			//send email
-			mailService.sendNewMail(agentDto.getUser().getUserEmail().trim(), "Passord", "Dear user, this is your password "+pswd);
+			mailService.sendNewMail(agentDto.getUser().getUserEmail().trim(), "Passord", "Dear user, this is your password "+newNoEncryptPassword);
+		} else {
+			log.info("No email sent");
 		}
 
 		return savedAgent;

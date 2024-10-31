@@ -96,6 +96,8 @@ public class AdminServiceImpl implements AdminService {
 
 		//update section
 		User existingUser=userRepository.findUserByIdUser(adminDto.getUser().getId());
+		String existingEmail = existingUser != null ? existingUser.getUserEmail() : null;
+		
 		if (existingUser !=null && !existingUser.getUserEmail().equals(adminDto.getUser().getUserEmail())){
 
 			if (userAlreadyExists(adminDto.getUser().getUserEmail())){
@@ -115,7 +117,7 @@ public class AdminServiceImpl implements AdminService {
 
 		String pswd="";
 		String newNoEncryptPassword="";
-		if (!adminDto.getUser().getUserEmail().equals(userEmail(adminDto.getUser().getId())) ){
+		if (!adminDto.getUser().getUserEmail().equals(existingEmail) ){
 
 			//change existing password and send new password to new user
 			newNoEncryptPassword = generateCommonLangPassword();
@@ -134,13 +136,15 @@ public class AdminServiceImpl implements AdminService {
 		user.setUserPhoneNumber(adminDto.getUser().getUserPhoneNumber());
 		user.setUserPassword(pswd);
 		userRepository.save(user);
-
+		
 		AdminDto savedAdmin=AdminDto.fromEntity(adminRepository.save(AdminDto.toEntity(adminDto)));
-
-		if (!adminDto.getUser().getUserEmail().equals(userEmail(adminDto.getUser().getId())) ){
-
+		
+		if (!adminDto.getUser().getUserEmail().equals(existingEmail) ){
+			//log.info("Sending new password email to {}", adminDto.getUser().getUserEmail());
 			//send email
-			mailService.sendNewMail(adminDto.getUser().getUserEmail().trim(), "Passord", "Dear user, this is your password "+pswd);
+			mailService.sendNewMail(adminDto.getUser().getUserEmail().trim(), "Passord", "Dear user, this is your password "+newNoEncryptPassword);
+		} else {
+			log.info("No email sent");
 		}
 
 		return savedAdmin;
