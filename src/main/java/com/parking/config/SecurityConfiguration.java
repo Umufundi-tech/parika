@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -33,52 +34,97 @@ public class SecurityConfiguration {
 	@Autowired
 	private JwtFilter jwtFilter;
 	
+//	@Bean
+//	public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+//	    return httpSecurity.csrf(AbstractHttpConfigurer::disable)
+//	            .authorizeHttpRequests(auth -> auth
+//	                    .requestMatchers(
+//	                            new AntPathRequestMatcher("/auth/login"),
+//	                            new AntPathRequestMatcher("/**/authenticate"),
+//	                            new AntPathRequestMatcher("/**/refresh-token"),
+//	                            new AntPathRequestMatcher("/**/superadmins/create"),
+//	                            new AntPathRequestMatcher("/**/admins/create"),
+//	                            new AntPathRequestMatcher("/**/agents/create"),
+//	                            new AntPathRequestMatcher("/api/access/**"),
+//	                            new AntPathRequestMatcher("/h2-console/**"),
+//	                            // resources for swagger to work properly
+//	                            new AntPathRequestMatcher("/v2/api-docs"),
+//	                            new AntPathRequestMatcher("/v3/api-docs"),
+//	                            new AntPathRequestMatcher("/v3/api-docs/**"),
+//	                            new AntPathRequestMatcher("/swagger-resources"),
+//	                            new AntPathRequestMatcher("/swagger-resources/**"),
+//	                            new AntPathRequestMatcher("/configuration/ui"),
+//	                            new AntPathRequestMatcher("/configuration/security"),
+//	                            new AntPathRequestMatcher("/swagger-ui/**"),
+//	                            new AntPathRequestMatcher("/webjars/**"),
+//	                            new AntPathRequestMatcher("/swagger-ui.html")
+//	                    )
+//	                    .permitAll()
+//	                    .anyRequest().authenticated())
+//	            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+//	            //.authenticationProvider(authenticationProvider())
+//	            .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+//	            .addFilterBefore(corsFilter(), SessionManagementFilter.class)
+//	            .build();
+//	}
+	
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-	    return httpSecurity.csrf(AbstractHttpConfigurer::disable)
+	    return httpSecurity
+	            .cors(Customizer.withDefaults()) // Enable CORS with default settings
+	            .csrf(AbstractHttpConfigurer::disable)
 	            .authorizeHttpRequests(auth -> auth
 	                    .requestMatchers(
 	                            new AntPathRequestMatcher("/auth/login"),
-	                            new AntPathRequestMatcher("/**/authenticate"),
-	                            new AntPathRequestMatcher("/**/refresh-token"),
-	                            new AntPathRequestMatcher("/**/superadmins/create"),
-	                            new AntPathRequestMatcher("/**/admins/create"),
-	                            new AntPathRequestMatcher("/**/agents/create"),
-	                            new AntPathRequestMatcher("/api/access/**"),
-	                            new AntPathRequestMatcher("/h2-console/**"),
-	                            // resources for swagger to work properly
+	                            new AntPathRequestMatcher("//authenticate"),
+	                            new AntPathRequestMatcher("//refresh-token"),
+	                            new AntPathRequestMatcher("//superadmins/create"),
+	                            new AntPathRequestMatcher("//admins/create"),
+	                            new AntPathRequestMatcher("//agents/create"),
+	                            new AntPathRequestMatcher("/api/access/"),
+	                            new AntPathRequestMatcher("/h2-console/"),
 	                            new AntPathRequestMatcher("/v2/api-docs"),
 	                            new AntPathRequestMatcher("/v3/api-docs"),
-	                            new AntPathRequestMatcher("/v3/api-docs/**"),
 	                            new AntPathRequestMatcher("/swagger-resources"),
-	                            new AntPathRequestMatcher("/swagger-resources/**"),
+	                            new AntPathRequestMatcher("/swagger-resources/"),
 	                            new AntPathRequestMatcher("/configuration/ui"),
 	                            new AntPathRequestMatcher("/configuration/security"),
-	                            new AntPathRequestMatcher("/swagger-ui/**"),
-	                            new AntPathRequestMatcher("/webjars/**"),
+	                            new AntPathRequestMatcher("/swagger-ui/"),
+	                            new AntPathRequestMatcher("/webjars/"),
 	                            new AntPathRequestMatcher("/swagger-ui.html")
 	                    )
 	                    .permitAll()
 	                    .anyRequest().authenticated())
 	            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-	            //.authenticationProvider(authenticationProvider())
 	            .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
-	            .addFilterBefore(corsFilter(), SessionManagementFilter.class)
 	            .build();
 	}
 
 
-    @Bean
+//    @Bean
+//    public CorsFilter corsFilter() {
+//        final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//        final CorsConfiguration config = new CorsConfiguration();
+//        config.setAllowCredentials(true);
+//        // Don't do this in production, use a proper list  of allowed origins
+//        config.setAllowedOriginPatterns(Collections.singletonList("*"));
+//        config.setAllowedHeaders(Arrays.asList("Origin", "Content-Type", "Accept", "Authorization"));
+//        config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "OPTIONS", "DELETE", "PATCH"));
+//        source.registerCorsConfiguration("/**", config);
+//        // some comment here
+//        return new CorsFilter(source);
+//    }
+	
+	@Bean
     public CorsFilter corsFilter() {
         final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         final CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
-        // Don't do this in production, use a proper list  of allowed origins
-        config.setAllowedOriginPatterns(Collections.singletonList("*"));
+        // Allow specific origins (including localhost for testing)
+        config.setAllowedOrigins(Arrays.asList("https://parikapp.com", "https://admin.parikapp.com", "http://localhost:8080"));
         config.setAllowedHeaders(Arrays.asList("Origin", "Content-Type", "Accept", "Authorization"));
         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "OPTIONS", "DELETE", "PATCH"));
-        source.registerCorsConfiguration("/**", config);
-        // some comment here
+        source.registerCorsConfiguration("/", config);
         return new CorsFilter(source);
     }
 
