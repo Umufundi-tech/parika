@@ -23,4 +23,5 @@ public interface TransactionService {
     
     TransactionSummaryDto getAllTransactionsWithTotalAmount(Long companyId, LocalDate startDate, LocalDate endDate, Pageable pageable);
     
+    void delete (Long id);
 }

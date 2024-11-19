@@ -10,6 +10,7 @@ import com.parking.dto.PaymentSaveDto;
 import org.springframework.data.domain.Page;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -96,6 +97,13 @@ public interface TransactionApi {
         @RequestParam(value = "page", defaultValue = "0") int page,
         @RequestParam(value = "size", defaultValue = "10") int size
     );
+    
+    @Operation(summary = "Supprimer une transaction par son ID", description = "Cette methode permet de supprimer une transaction par ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "La transaction a ete supprime")
+    })
+    @DeleteMapping(value = Constants.APP_ROOT + "/transactions/delete/{id}")
+    void delete(@PathVariable("id") Long id);
 
 
 

@@ -69,5 +69,11 @@ public class TransactionController implements TransactionApi {
 		Pageable pageable = PageRequest.of(page, size);
 		return transactionService.getAllTransactionsWithTotalAmount(companyId, startDate, endDate, pageable);
 	}
+
+	@Override
+	public void delete(Long id) {
+		transactionService.delete(id);
+		
+	}
     
 }

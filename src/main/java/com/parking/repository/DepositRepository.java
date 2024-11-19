@@ -15,4 +15,5 @@ public interface DepositRepository extends JpaRepository<Deposit, Long> {
     Page<Deposit> findAllDeposit(Pageable pageable);
     
     List<Deposit> findAllByTransactionId(Long transaction_id);
+    
 }

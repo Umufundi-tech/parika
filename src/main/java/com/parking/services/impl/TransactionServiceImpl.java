@@ -362,21 +362,33 @@ public class TransactionServiceImpl implements TransactionService {
 	}
 
 
-//	@Override
-//	public void delete(Long id) {
-//		if(id == null) {
-//			log.error("Transaction ID is null");
-//		}
-//		
-//		List<Payment> payments = paymentRepository.findAllByTransaction_id(id);
-//		List<Deposit> deposits = depositRepository.findAllByTransactionId(id);
-//		
+	@Override
+	public void delete(Long id) {
+		if(id == null) {
+			log.error("Transaction ID is null");
+		}
+		
+		List<Payment> payments = paymentRepository.findAllByTransaction_id(id);
+		List<Deposit> deposits = depositRepository.findAllByTransactionId(id);
+		
 //		if(!payments.isEmpty() || !deposits.isEmpty()) {
 //			throw new InvalidEntityException("Impossible de supprimer la transaction car elle est déjà utilisé", 
 //					ErrorCodes.TRANSACTION_ALREADY_IN_USE);
 //		}
-//		
-//		transactionRepository.deleteById(id);
-//		
-//	}
+		
+		// Supprimer les paiements associés
+	    if (!payments.isEmpty()) {
+	        log.info("Suppression de {} paiements associés à la transaction ID {}", payments.size(), id);
+	        paymentRepository.deleteAll(payments);
+	    }
+
+	    // Supprimer les dépôts associés
+	    if (!deposits.isEmpty()) {
+	        log.info("Suppression de {} dépôts associés à la transaction ID {}", deposits.size(), id);
+	        depositRepository.deleteAll(deposits);
+	    }
+		
+		transactionRepository.deleteById(id);
+		
+	}
 }

@@ -15,4 +15,5 @@ public interface PaymentRepository extends JpaRepository<Payment, Long> {
     Page<Payment> findAllPayment(Pageable pageable);
     
     List<Payment> findAllByTransaction_id(Long transaction_id);
+    
 }
