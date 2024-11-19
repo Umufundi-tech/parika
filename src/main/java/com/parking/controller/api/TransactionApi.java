@@ -89,7 +89,7 @@ public interface TransactionApi {
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Liste des transactions et la somme totale")
     })
-    @GetMapping(value = "/transactions/companies-summary", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/transactions/companies-summar", produces = MediaType.APPLICATION_JSON_VALUE)
     TransactionSummaryDto findAllTransactionsWithTotalAmount(
         @RequestParam(value = "companyId", required = false) Long companyId,
         @RequestParam(value = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
