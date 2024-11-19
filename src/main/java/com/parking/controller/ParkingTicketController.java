@@ -41,7 +41,7 @@ public class ParkingTicketController implements ParkingTicketApi {
 
     @Override
     public void delete(Long id) {
-
+    	parkingTicketService.delete(id);
     }
 
 	@Override
